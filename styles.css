@@ -1,0 +1,47 @@
+body {
+    background: #1d0303;
+    perspective: 800px;
+}
+.card, .cardFront, .cardBack {
+    width: 100px;
+    height: 200px;
+    border-radius: 12px;
+    position: absolute;
+    cursor: pointer;
+}
+.card {
+    border: solid 3px black;
+    font-family: Calibri, serif;
+    font-size: 24px;
+}
+.cardFront {
+    background: #eee;
+    /*opacity: 1;*/
+}
+.cardBack {
+    background: #636;
+    transform: rotateY(180deg);
+    opacity: 0;
+}
+.cardInner {
+    height: 100%;
+    text-align: center;
+}
+@keyframes rotateOnY {
+    to {
+        transform: rotateY(180deg);
+    }
+}
+.rotate {  /* only for .card */
+    animation: rotateOnY 1 3s ease-in-out;
+}
+.show {
+    opacity: 1;
+    transition: opacity .00001s;
+    transition-delay: 1.66s;
+}
+.hide {
+    opacity: 0;
+    transition: opacity .00001s;
+    transition-delay: 1.66s;
+}

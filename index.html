@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cards</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="card" id="card_1" onClick="anim(event)">
+    <div class="cardFront" id="cardFront_1">front</div>
+    <div class="cardBack" id="cardBack_1">back</div>
+</div>
+
+
+</body>
+
+<script>   // TODO: Add PHPdoc
+    const cards = document.getElementsByClassName('card');
+
+    for (let card of cards) {
+        let x = 500 + 100 * Math.random() + 'px';
+        let y = 300 + 100 * Math.random() + 'px';
+        card.style.left /*= document.getElementById(`cardBack_${card.id.split('_')[1]}`).style.left*/ = x;
+        card.style.top /*= document.getElementById(`cardBack_${card.id.split('_')[1]}`).style.top*/ = y;
+    }
+
+    function anim(e) {
+        get('card_1').addClass('rotate');
+        get('cardFront_1').addClass('hide');
+        get('cardBack_1').addClass('show');
+    }
+
+    get = (id) => {
+        return document.getElementById(id);
+    }
+
+    HTMLElement.prototype.addClass = function(className) {
+        this.classList.add(className);
+    };
+</script>
+
+</html>
