@@ -4,40 +4,82 @@
     <meta charset="UTF-8">
     <title>Cards</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="jquery-1.11.1.min.js"></script>
 </head>
 <body>
-
-<div class="card" id="card_1" onClick="anim(event)">
-    <div class="cardFront" id="cardFront_1">front</div>
-    <div class="cardBack" id="cardBack_1">back</div>
+<div id="origin">
+    <div class="card" id="card_1" onClick="anim(event)">
+<!--        <div class="cardFront" id="cardFront_1">front</div>-->
+        <div class="cardBack rotated" id="cardBack_1">E</div>
+    </div>
+    <div class="cardShadow" id="cardShadow_1"></div>
 </div>
+<div id="info" style="font-size: 32px"></div>
 
 
 </body>
 
-<script>   // TODO: Add PHPdoc
+<script>   // TODO: Add PHPdoc, on window resize origin, krásný odlesky, -webkit- (safari)
     const cards = document.getElementsByClassName('card');
+    const cardDimensions = {x: 0, y: 0};
+    const $i = $($('#info'));
 
-    for (let card of cards) {
-        let x = 500 + 100 * Math.random() + 'px';
-        let y = 300 + 100 * Math.random() + 'px';
-        card.style.left /*= document.getElementById(`cardBack_${card.id.split('_')[1]}`).style.left*/ = x;
-        card.style.top /*= document.getElementById(`cardBack_${card.id.split('_')[1]}`).style.top*/ = y;
-    }
-
-    function anim(e) {
-        get('card_1').addClass('rotate');
-        get('cardFront_1').addClass('hide');
-        get('cardBack_1').addClass('show');
+    updateCardDimensions = () => {
+        cardDimensions.x = get('card_1').scrollWidth;
+        cardDimensions.y = get('card_1').scrollHeight;
     }
 
     get = (id) => {
         return document.getElementById(id);
     }
 
+    rndSign = () => {
+        let r = Math.random();
+        return r < .5 ? -1 : 1;
+    }
+
+    get('origin').style.left = window.innerWidth / 4 + 'px';
+    get('origin').style.top = window.innerHeight / 4 + 'px';
+
+    for (let card of cards) {
+        let x = rndSign() * 100 * Math.random() - cardDimensions.x / 2 + 'px';
+        let y = rndSign() * 100 * Math.random() - cardDimensions.y / 2 + 'px';
+        card.style.left = x;
+        card.style.top = y;
+        get('cardShadow_1').style.left = x;
+        get('cardShadow_1').style.top = y;
+    }
+
+    function anim(e) {
+        get('card_1').addClass('rotate');
+        // get('cardFront_1').addClass('hide');
+        // get('cardBack_1').addClass('show');
+        // get('cardBack_1').removeClass('rotated');
+        // get('cardBack_1').addClass('resetRotation');
+    }
+
+
     HTMLElement.prototype.addClass = function(className) {
         this.classList.add(className);
     };
+    HTMLElement.prototype.removeClass = function(className) {
+        this.classList.remove(className);
+    };
+
+    function animate() {
+        requestAnimationFrame(animate);
+        // $i.text($('#card_1').css('animationPlayState'));
+        // $i.text($('#cardBack_1').attr('class'));
+    }
+
+    animate();
+
+    $('#card_1').on('webkitAnimationEnd', function() {
+        // this.style.animationPlayState = "paused";
+        console.log('paused');
+    });
+
+
 </script>
 
 </html>

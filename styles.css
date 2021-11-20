@@ -1,8 +1,12 @@
 body {
-    background: #1d0303;
+    background: #021b24;
+    font-family: Calibri, serif;
+}
+#origin {
+    position: absolute;
     perspective: 800px;
 }
-.card, .cardFront, .cardBack {
+.card, .cardFront, .cardBack, .cardShadow {
     width: 100px;
     height: 200px;
     border-radius: 12px;
@@ -11,37 +15,59 @@ body {
 }
 .card {
     border: solid 3px black;
-    font-family: Calibri, serif;
     font-size: 24px;
+    z-index: 1;
 }
 .cardFront {
     background: #eee;
+    /*transform: rotateY(0deg);*/
     /*opacity: 1;*/
 }
 .cardBack {
     background: #636;
+    /*backface-visibility: hidden;*/
+    /*opacity: 0;*/
+}
+.cardShadow {
+    background: #0003;
+    box-shadow: 0 0 4px 8px #0003;
+    /*z-index: 0;*/
+}
+.rotated {
     transform: rotateY(180deg);
-    opacity: 0;
+    /*backface-visibility: hidden;*/
 }
-.cardInner {
-    height: 100%;
-    text-align: center;
-}
-@keyframes rotateOnY {
+@keyframes rotateTo180 {
+    /*0% {*/
+    /*    transform: rotateY(0deg);*/
+    /*}*/
     to {
         transform: rotateY(180deg);
     }
+
+}
+@keyframes reset {
+    to {
+        /*transform: rotateY(0deg);*/
+        transform: rotateZ(90deg);
+    }
 }
 .rotate {  /* only for .card */
-    animation: rotateOnY 1 3s ease-in-out;
+    animation: rotateTo180 1 3s ease-in-out both;
+    backface-visibility: hidden;
 }
 .show {
-    opacity: 1;
+    /*opacity: 1;*/
     transition: opacity .00001s;
-    transition-delay: 1.66s;
+    transition-delay: 1.4s;
 }
 .hide {
-    opacity: 0;
+    /*opacity: 0;*/
     transition: opacity .00001s;
-    transition-delay: 1.66s;
+    transition-delay: 1.4s;
+}
+.resetRotation {
+    animation: reset 1 .00001s linear;
+    animation-delay: 4s;
+
 }
