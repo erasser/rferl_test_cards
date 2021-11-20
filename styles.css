@@ -14,6 +14,7 @@ body {
     border-radius: 12px;
     position: absolute;
     cursor: pointer;
+    z-index: 1;
 }
 .cardFront {
     background: #eee;
@@ -22,6 +23,9 @@ body {
     background: #636;
     backface-visibility: hidden;
     transform: rotateY(180deg);
+}
+.cardShadow {
+    z-index: 0;
 }
 .setRotated360 {
     transform: rotateY(360deg);
