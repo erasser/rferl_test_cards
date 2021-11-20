@@ -39,8 +39,8 @@
         this.classList.remove(className);
     };
 
-    get('origin').style.left = window.innerWidth / 4 + 'px';
-    get('origin').style.top = window.innerHeight / 2 + 'px';
+    get('origin').style.left = window.innerWidth / 5 + 'px';
+    get('origin').style.top = window.innerHeight / 5 + 'px';
     function openCard(e) {
         let i = e.target.id.split('_')[1];
         // unsetClickListeners(i);
@@ -56,6 +56,7 @@
         get(`cardBack_${i}`).removeClass('rotateBackToFront');
         get(`cardShadow_${i}`).removeClass('rotateShadow');
         get(`cardShadow_${i}`).removeClass('rotateShadowBack');
+        get(`cardShadow_${i}`).removeClass('setRotated180');
 
         // Rotate
         get(`cardFront_${i}`).addClass('rotateFrontSide');
@@ -72,13 +73,13 @@
         // Set initial transformations before rotation
         get(`cardBack_${i}`).addClass('setRotated360');
         get(`cardBack_${i}`).addClass('rotateBackToFront');
+        get(`cardShadow_${i}`).addClass('setRotated180');
 
         // Rotate
         get(`cardFront_${i}`).addClass('setRotated180');
         get(`cardFront_${i}`).addClass('rotateFrontToBack');
         get(`cardShadow_${i}`).addClass('rotateShadowBack');
     }
-
 
     // function animate() {
     //     requestAnimationFrame(animate);
@@ -98,12 +99,13 @@
     }
 
     // Generate cards
+    const angleSegment = 2 * Math.PI / 5;
     for (let i = 0; i < 5; ++i) {
         const cardHTML =
             `<div class="card" id="card_${i}">` +
-            `    <div class="cardFront" id="cardFront_${i}">${cardsContents[i]}</div>` +
-            `    <div class="cardBack" id="cardBack_${i}"></div>` +
-            `    <div class="cardShadow" id="cardShadow_${i}"></div>` +
+            `    <div class="cardFront" id="cardFront_${i}" style="z-index: ${2*i+1}">${cardsContents[i]}</div>` +
+            `    <div class="cardBack" id="cardBack_${i}" style="z-index: ${2*i+1}"></div>` +
+            `    <div class="cardShadow" id="cardShadow_${i}" style="z-index: ${2*i}"></div>` +
             `</div>`;
 
         const newCard = document.createElement('template');
@@ -113,11 +115,14 @@
         if (i === 0)
             updateCardDimensions();
 
-        const x = rndSign() * 100 * Math.random() - cardDimensions.x / 2 + 'px';
-        const y = rndSign() * 100 * Math.random() - cardDimensions.y / 2 + 'px';
+        let angle = angleSegment * i;
+        let x = Math.cos(angle) * 20 + cardDimensions.x / 2 + rndSign() * 4 * Math.random();
+        let y = Math.sin(angle) * 10 + cardDimensions.y / 2 + rndSign() * 4 * Math.random();
+        // const x = rndSign() * 20 * Math.random() - cardDimensions.x / 2 + 'px';
+        // const y = rndSign() * 20 * Math.random() - cardDimensions.y / 2 + 'px';
         const newCardEl = get(`card_${i}`);
-        newCardEl.style.left = x;
-        newCardEl.style.top = y;
+        newCardEl.style.left = x + 'px';
+        newCardEl.style.top = y + 'px';
 
         setClickListeners(i);
 
