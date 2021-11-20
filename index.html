@@ -13,11 +13,9 @@
     <div class="cardShadow" id="cardShadow_1"></div>
 </div>
 <div id="info" style="font-size: 32px"></div>
-
-
 </body>
 
-<script>   // TODO: Add PHPdoc, on window resize origin, krásný odlesky, -webkit- (safari), encapsulate whole script
+<script>   // TODO: Add PHPdoc, on window resize origin, krásný odlesky, -webkit- (safari), encapsulate whole script, nejsou některý třídy stejný?
     const cards = document.getElementsByClassName('card');
     const cardDimensions = {x: 0, y: 0};
     const $i = $($('#info'));
@@ -51,6 +49,8 @@
     function openCard(e) {
         unsetClickListeners();
 
+        /* All of this must be called in particular order */
+
         // Set initial transformations before rotation
         get('cardFront_1').removeClass('rotateFrontSide');
         get('cardFront_1').removeClass('setRotated180');
@@ -58,14 +58,19 @@
         get('cardBack_1').removeClass('rotateBackSide');
         get('cardBack_1').removeClass('setRotated360');
         get('cardBack_1').removeClass('rotateBackToFront');
+        get('cardShadow_1').removeClass('rotateShadow');
+        get('cardShadow_1').removeClass('rotateShadowBack');
 
         // Rotate
         get('cardFront_1').addClass('rotateFrontSide');
         get('cardBack_1').addClass('rotateBackSide');
+        get('cardShadow_1').addClass('rotateShadow');
     }
 
     function closeCard(e) {
         unsetClickListeners();
+
+        /* All of this must be called in particular order */
 
         // Set initial transformations before rotation
         get('cardBack_1').addClass('setRotated360');
@@ -74,6 +79,7 @@
         // Rotate
         get('cardFront_1').addClass('setRotated180');
         get('cardFront_1').addClass('rotateFrontToBack');
+        get('cardShadow_1').addClass('rotateShadowBack');
     }
 
     // Extend HTMLElement class to simplify DOM manipulation
