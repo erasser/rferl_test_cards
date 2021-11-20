@@ -8,11 +8,11 @@
 </head>
 <body>
 <div id="origin">
-    <div class="card" id="card_1" onClick="anim(event)">
-<!--        <div class="cardFront" id="cardFront_1">front</div>-->
-        <div class="cardBack rotated" id="cardBack_1">E</div>
-    </div>
-    <div class="cardShadow" id="cardShadow_1"></div>
+<!--    <div class="card" id="card_1" onClick="anim(event)">-->
+        <div class="cardFront" id="cardFront_1" onClick="animF(event)">front</div>
+        <div class="cardBack" id="cardBack_1" onClick="animB(event)">this is back</div>
+<!--    </div>-->
+<!--    <div class="cardShadow" id="cardShadow_1"></div>-->
 </div>
 <div id="info" style="font-size: 32px"></div>
 
@@ -50,12 +50,12 @@
         get('cardShadow_1').style.top = y;
     }
 
-    function anim(e) {
-        get('card_1').addClass('rotate');
-        // get('cardFront_1').addClass('hide');
-        // get('cardBack_1').addClass('show');
-        // get('cardBack_1').removeClass('rotated');
-        // get('cardBack_1').addClass('resetRotation');
+    function animF(e) {
+        get('cardFront_1').addClass('rotate');
+        get('cardBack_1').addClass('rotateB');
+    }
+    function animB(e) {
+        // get('cardBack_1').addClass('rotateB');
     }
 
 
@@ -74,10 +74,10 @@
 
     animate();
 
-    $('#card_1').on('webkitAnimationEnd', function() {
+    // $('#card_1').on('webkitAnimationEnd', function() {
         // this.style.animationPlayState = "paused";
-        console.log('paused');
-    });
+        // console.log('paused');
+    // });
 
 
 </script>
