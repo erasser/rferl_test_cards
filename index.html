@@ -9,8 +9,8 @@
 <body>
 <div id="origin">
 <!--    <div class="card" id="card_1" onClick="anim(event)">-->
-        <div class="cardFront" id="cardFront_1" onClick="animF(event)">front</div>
-        <div class="cardBack" id="cardBack_1" onClick="animB(event)">this is back</div>
+        <div class="cardFront" id="cardFront_1">front</div>
+        <div class="cardBack" id="cardBack_1">this is back</div>
 <!--    </div>-->
 <!--    <div class="cardShadow" id="cardShadow_1"></div>-->
 </div>
@@ -19,7 +19,7 @@
 
 </body>
 
-<script>   // TODO: Add PHPdoc, on window resize origin, krásný odlesky, -webkit- (safari)
+<script>   // TODO: Add PHPdoc, on window resize origin, krásný odlesky, -webkit- (safari), encapsulate whole script
     const cards = document.getElementsByClassName('card');
     const cardDimensions = {x: 0, y: 0};
     const $i = $($('#info'));
@@ -50,22 +50,32 @@
         get('cardShadow_1').style.top = y;
     }
 
-    function animF(e) {
+    function openCard(e) {
+        unsetClickListeners();
+
+        get('cardFront_1').removeClass('rotateF');
+        get('cardFront_1').removeClass('setRotated180');
+        get('cardFront_1').removeClass('rotateFrontBack');
+
+        get('cardBack_1').removeClass('rotateB');
+        get('cardBack_1').removeClass('setRotated360');
+        get('cardBack_1').removeClass('rotateBackFront');
+
         get('cardFront_1').addClass('rotateF');
         get('cardBack_1').addClass('rotateB');
     }
-    function animB(e) {
-        // $('#cardBack_1').css('visibility', 'hidden');
+
+    function closeCard(e) {
+        unsetClickListeners();
+
         get('cardBack_1').addClass('setRotated360');
         get('cardBack_1').addClass('rotateBackFront');
 
         get('cardFront_1').addClass('setRotated180');
         get('cardFront_1').addClass('rotateFrontBack');
-
-
     }
 
-
+    // Extend HTMLElement class to simplify DOM manipulation
     HTMLElement.prototype.addClass = function(className) {
         this.classList.add(className);
     };
@@ -73,18 +83,30 @@
         this.classList.remove(className);
     };
 
-    function animate() {
-        requestAnimationFrame(animate);
+    // function animate() {
+    //     requestAnimationFrame(animate);
         // $i.text($('#card_1').css('animationPlayState'));
         // $i.text($('#cardBack_1').attr('class'));
+    // }
+    // animate();
+
+    setClickListeners = () => {
+        get('cardFront_1').addEventListener('click', openCard);
+        get('cardBack_1').addEventListener('click', closeCard);
     }
 
-    animate();
+    unsetClickListeners = () => {
+        get('cardFront_1').removeEventListener('click', openCard);
+        get('cardBack_1').removeEventListener('click', closeCard);
+    }
 
-    // $('#card_1').on('webkitAnimationEnd', function() {
-        // this.style.animationPlayState = "paused";
-        // console.log('paused');
-    // });
+    setClickListeners();
+
+
+    get('cardFront_1').addEventListener('webkitAnimationEnd', function() {
+        console.log('reset listeners');
+        setClickListeners();
+    });
 
 
 </script>
