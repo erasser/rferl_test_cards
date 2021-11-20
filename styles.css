@@ -22,10 +22,10 @@ body {
     cursor: pointer;
 }
 .cardFront {
-    background: #eee;
+    background: #666;
 }
 .cardBack {
-    background: #636;
+    background: #eee;
     backface-visibility: hidden;
     transform: rotateY(180deg);
 }
