@@ -7,26 +7,15 @@
     <script src="jquery-1.11.1.min.js"></script>
 </head>
 <body>
-<div id="origin">
-    <div class="card" id="card_1">
-        <div class="cardFront" id="cardFront_1">front</div>
-        <div class="cardBack" id="cardBack_1">this is back</div>
-        <div class="cardShadow" id="cardShadow_1"></div>
-    </div>
-</div>
+<div id="origin"></div>
 <div id="info" style="font-size: 32px"></div>
 </body>
 
-<script>   // TODO: Add PHPdoc, on window resize origin, krásný odlesky, -webkit- (safari), encapsulate whole script, nejsou některý třídy stejný?
+<script>   // TODO: Add PHPdoc, on window resize origin, krásný odlesky, -webkit- (safari), encapsulate whole script, nejsou některý třídy stejný?, click events could be simplified to .card
     const cards = document.getElementsByClassName('card');
     const cardDimensions = {x: 0, y: 0};
     const cardsContents = ['Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet'];
     const $i = $($('#info'));
-
-    updateCardDimensions = () => {
-        cardDimensions.x = get('card_1').scrollWidth;
-        cardDimensions.y = get('card_1').scrollHeight;
-    }
 
     get = (id) => {
         return document.getElementById(id);
@@ -37,43 +26,9 @@
         return r < .5 ? -1 : 1;
     }
 
-    get('origin').style.left = window.innerWidth / 4 + 'px';
-    get('origin').style.top = window.innerHeight / 4 + 'px';
-
-    function openCard(e) {
-        unsetClickListeners();
-
-        /* All of this must be called in particular order */
-
-        // Set initial transformations before rotation
-        get('cardFront_1').removeClass('rotateFrontSide');
-        get('cardFront_1').removeClass('setRotated180');
-        get('cardFront_1').removeClass('rotateFrontToBack');
-        get('cardBack_1').removeClass('rotateBackSide');
-        get('cardBack_1').removeClass('setRotated360');
-        get('cardBack_1').removeClass('rotateBackToFront');
-        get('cardShadow_1').removeClass('rotateShadow');
-        get('cardShadow_1').removeClass('rotateShadowBack');
-
-        // Rotate
-        get('cardFront_1').addClass('rotateFrontSide');
-        get('cardBack_1').addClass('rotateBackSide');
-        get('cardShadow_1').addClass('rotateShadow');
-    }
-
-    function closeCard(e) {
-        unsetClickListeners();
-
-        /* All of this must be called in particular order */
-
-        // Set initial transformations before rotation
-        get('cardBack_1').addClass('setRotated360');
-        get('cardBack_1').addClass('rotateBackToFront');
-
-        // Rotate
-        get('cardFront_1').addClass('setRotated180');
-        get('cardFront_1').addClass('rotateFrontToBack');
-        get('cardShadow_1').addClass('rotateShadowBack');
+    updateCardDimensions = () => {
+        cardDimensions.x = get('card_0').scrollWidth;
+        cardDimensions.y = get('card_0').scrollHeight;
     }
 
     // Extend HTMLElement class to simplify DOM manipulation
@@ -84,6 +39,47 @@
         this.classList.remove(className);
     };
 
+    get('origin').style.left = window.innerWidth / 4 + 'px';
+    get('origin').style.top = window.innerHeight / 2 + 'px';
+    function openCard(e) {
+        let i = e.target.id.split('_')[1];
+        // unsetClickListeners(i);
+
+        /* All of these must be called in particular order */
+
+        // Set initial transformations before rotation
+        get(`cardFront_${i}`).removeClass('rotateFrontSide');
+        get(`cardFront_${i}`).removeClass('setRotated180');
+        get(`cardFront_${i}`).removeClass('rotateFrontToBack');
+        get(`cardBack_${i}`).removeClass('rotateBackSide');
+        get(`cardBack_${i}`).removeClass('setRotated360');
+        get(`cardBack_${i}`).removeClass('rotateBackToFront');
+        get(`cardShadow_${i}`).removeClass('rotateShadow');
+        get(`cardShadow_${i}`).removeClass('rotateShadowBack');
+
+        // Rotate
+        get(`cardFront_${i}`).addClass('rotateFrontSide');
+        get(`cardBack_${i}`).addClass('rotateBackSide');
+        get(`cardShadow_${i}`).addClass('rotateShadow');
+    }
+
+    function closeCard(e) {
+        let i = e.target.id.split('_')[1];
+        // unsetClickListeners(i);
+
+        /* All of these must be called in particular order */
+
+        // Set initial transformations before rotation
+        get(`cardBack_${i}`).addClass('setRotated360');
+        get(`cardBack_${i}`).addClass('rotateBackToFront');
+
+        // Rotate
+        get(`cardFront_${i}`).addClass('setRotated180');
+        get(`cardFront_${i}`).addClass('rotateFrontToBack');
+        get(`cardShadow_${i}`).addClass('rotateShadowBack');
+    }
+
+
     // function animate() {
     //     requestAnimationFrame(animate);
         // $i.text($('#card_1').css('animationPlayState'));
@@ -91,33 +87,47 @@
     // }
     // animate();
 
-    setClickListeners = () => {
-        get('cardFront_1').addEventListener('click', openCard);
-        get('cardBack_1').addEventListener('click', closeCard);
+    setClickListeners = (i) => {
+        get(`cardFront_${i}`).addEventListener(`click`, openCard);
+        get(`cardBack_${i}`).addEventListener(`click`, closeCard);
     }
 
-    unsetClickListeners = () => {
-        get('cardFront_1').removeEventListener('click', openCard);
-        get('cardBack_1').removeEventListener('click', closeCard);
+    unsetClickListeners = (i) => {
+        get(`cardFront_${i}`).removeEventListener(`click`, openCard);
+        get(`cardBack_${i}`).removeEventListener(`click`, closeCard);
     }
-
-    setClickListeners();
-
-    get('cardFront_1').addEventListener('webkitAnimationEnd', () => {
-        setClickListeners();
-    });
 
     // Generate cards
     for (let i = 0; i < 5; ++i) {
+        const cardHTML =
+            `<div class="card" id="card_${i}">` +
+            `    <div class="cardFront" id="cardFront_${i}">${cardsContents[i]}</div>` +
+            `    <div class="cardBack" id="cardBack_${i}"></div>` +
+            `    <div class="cardShadow" id="cardShadow_${i}"></div>` +
+            `</div>`;
+
+        const newCard = document.createElement('template');
+        newCard.innerHTML = cardHTML;
+        get('origin').appendChild(newCard.content.firstChild);
+
+        if (i === 0)
+            updateCardDimensions();
+
+        const x = rndSign() * 100 * Math.random() - cardDimensions.x / 2 + 'px';
+        const y = rndSign() * 100 * Math.random() - cardDimensions.y / 2 + 'px';
+        const newCardEl = get(`card_${i}`);
+        newCardEl.style.left = x;
+        newCardEl.style.top = y;
+
+        setClickListeners(i);
+
+        get(`cardFront_${i}`).addEventListener('webkitAnimationEnd', () => {
+            setClickListeners(i);
+        });
+
 
     }
 
-    for (let card of cards) {
-        let x = rndSign() * 100 * Math.random() - cardDimensions.x / 2 + 'px';
-        let y = rndSign() * 100 * Math.random() - cardDimensions.y / 2 + 'px';
-        card.style.left = x;
-        card.style.top = y;
-    }
 
 
 </script>

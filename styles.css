@@ -6,20 +6,21 @@ body {
 }
 #origin {
     position: absolute;
-    perspective: 800px;
 }
 .card {
     position: absolute;
     width: 100px;
     height: 200px;
-    border-radius: 12px;
-    cursor: pointer;
+    perspective: 600px;
 }
-.cardFront, .cardBack, .cardShadow {
+.cardFront, .cardBack {
+    border: solid 3px black;
+    border-radius: 10px;
     position: absolute;
     width: 100%;
     height: 100%;
     z-index: 1;
+    cursor: pointer;
 }
 .cardFront {
     background: #eee;
@@ -30,6 +31,10 @@ body {
     transform: rotateY(180deg);
 }
 .cardShadow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
     background: #0003;
     box-shadow: 0 0 8px 8px #0003;
     z-index: 0;
