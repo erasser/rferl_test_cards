@@ -34,7 +34,7 @@ body {
     transform: rotateY(180deg);
 }
                             /***  animations  ***/
-.rotateF {
+.rotateFrontSide {
     animation: rotateTo180 1 var(--t) ease-in-out both;
     backface-visibility: hidden;
 }
@@ -43,7 +43,7 @@ body {
         transform: rotateY(180deg);
     }
 }
-.rotateB {
+.rotateBackSide {
     animation: rotateTo360 1 var(--t) ease-in-out forwards;
 }
 @keyframes rotateTo360 {
@@ -52,18 +52,18 @@ body {
     }
 }
 /****************************************************/
-.rotateFrontBack {
-    animation: rotateFrontBack 1 var(--t) ease-in-out forwards;
+.rotateFrontToBack {
+    animation: rotateFrontToBack 1 var(--t) ease-in-out forwards;
 }
-@keyframes rotateFrontBack {
+@keyframes rotateFrontToBack {
     to {
         transform: rotateY(0deg);
     }
 }
-.rotateBackFront {
-    animation: rotateBackFront 1 var(--t) ease-in-out forwards;
+.rotateBackToFront {
+    animation: rotateBackToFront 1 var(--t) ease-in-out forwards;
 }
-@keyframes rotateBackFront {
+@keyframes rotateBackToFront {
     to {
         transform: rotateY(180deg);
     }

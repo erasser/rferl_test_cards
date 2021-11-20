@@ -53,26 +53,26 @@
     function openCard(e) {
         unsetClickListeners();
 
-        get('cardFront_1').removeClass('rotateF');
+        get('cardFront_1').removeClass('rotateFrontSide');
         get('cardFront_1').removeClass('setRotated180');
-        get('cardFront_1').removeClass('rotateFrontBack');
+        get('cardFront_1').removeClass('rotateFrontToBack');
 
-        get('cardBack_1').removeClass('rotateB');
+        get('cardBack_1').removeClass('rotateBackSide');
         get('cardBack_1').removeClass('setRotated360');
-        get('cardBack_1').removeClass('rotateBackFront');
+        get('cardBack_1').removeClass('rotateBackToFront');
 
-        get('cardFront_1').addClass('rotateF');
-        get('cardBack_1').addClass('rotateB');
+        get('cardFront_1').addClass('rotateFrontSide');
+        get('cardBack_1').addClass('rotateBackSide');
     }
 
     function closeCard(e) {
         unsetClickListeners();
 
         get('cardBack_1').addClass('setRotated360');
-        get('cardBack_1').addClass('rotateBackFront');
+        get('cardBack_1').addClass('rotateBackToFront');
 
         get('cardFront_1').addClass('setRotated180');
-        get('cardFront_1').addClass('rotateFrontBack');
+        get('cardFront_1').addClass('rotateFrontToBack');
     }
 
     // Extend HTMLElement class to simplify DOM manipulation
