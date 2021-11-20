@@ -8,16 +8,12 @@ body {
     position: absolute;
     perspective: 800px;
 }
-.card, .cardFront, .cardBack, .cardShadow {
+.cardFront, .cardBack, .cardShadow {
     width: 100px;
     height: 200px;
     border-radius: 12px;
     position: absolute;
     cursor: pointer;
-}
-.card {
-    border: solid 3px black;
-    z-index: 1;
 }
 .cardFront {
     background: #eee;
