@@ -8,9 +8,11 @@
 </head>
 <body>
 <div id="origin">
-    <div class="cardFront" id="cardFront_1">front</div>
-    <div class="cardBack" id="cardBack_1">this is back</div>
-    <div class="cardShadow" id="cardShadow_1"></div>
+    <div class="card" id="card_1">
+        <div class="cardFront" id="cardFront_1">front</div>
+        <div class="cardBack" id="cardBack_1">this is back</div>
+        <div class="cardShadow" id="cardShadow_1"></div>
+    </div>
 </div>
 <div id="info" style="font-size: 32px"></div>
 </body>
@@ -18,6 +20,7 @@
 <script>   // TODO: Add PHPdoc, on window resize origin, krásný odlesky, -webkit- (safari), encapsulate whole script, nejsou některý třídy stejný?
     const cards = document.getElementsByClassName('card');
     const cardDimensions = {x: 0, y: 0};
+    const cardsContents = ['Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet'];
     const $i = $($('#info'));
 
     updateCardDimensions = () => {
@@ -36,15 +39,6 @@
 
     get('origin').style.left = window.innerWidth / 4 + 'px';
     get('origin').style.top = window.innerHeight / 4 + 'px';
-
-    for (let card of cards) {
-        let x = rndSign() * 100 * Math.random() - cardDimensions.x / 2 + 'px';
-        let y = rndSign() * 100 * Math.random() - cardDimensions.y / 2 + 'px';
-        card.style.left = x;
-        card.style.top = y;
-        get('cardShadow_1').style.left = x;
-        get('cardShadow_1').style.top = y;
-    }
 
     function openCard(e) {
         unsetClickListeners();
@@ -109,10 +103,21 @@
 
     setClickListeners();
 
-
     get('cardFront_1').addEventListener('webkitAnimationEnd', () => {
         setClickListeners();
     });
+
+    // Generate cards
+    for (let i = 0; i < 5; ++i) {
+
+    }
+
+    for (let card of cards) {
+        let x = rndSign() * 100 * Math.random() - cardDimensions.x / 2 + 'px';
+        let y = rndSign() * 100 * Math.random() - cardDimensions.y / 2 + 'px';
+        card.style.left = x;
+        card.style.top = y;
+    }
 
 
 </script>
