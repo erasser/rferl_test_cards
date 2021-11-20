@@ -1,3 +1,4 @@
+:root {--t: 1s;}
 body {
     background: #021b24;
     font-family: Calibri, serif;
@@ -26,36 +27,44 @@ body {
     backface-visibility: hidden;
     transform: rotateY(180deg);
 }
-.cardShadow {
-    background: #0003;
-    box-shadow: 0 0 4px 8px #0003;
+.setRotated360 {
+    transform: rotateY(360deg);
+}
+.setRotated180 {
+    transform: rotateY(180deg);
+}
+                            /***  animations  ***/
+.rotateF {
+    animation: rotateTo180 1 var(--t) ease-in-out both;
+    backface-visibility: hidden;
 }
 @keyframes rotateTo180 {
     to {
         transform: rotateY(180deg);
     }
 }
-@keyframes rotateTo0 {
+.rotateB {
+    animation: rotateTo360 1 var(--t) ease-in-out forwards;
+}
+@keyframes rotateTo360 {
     to {
         transform: rotateY(360deg);
     }
 }
-.rotateF {
-    animation: rotateTo180 1 3s ease-in-out both;
-    backface-visibility: hidden;
+/****************************************************/
+.rotateFrontBack {
+    animation: rotateFrontBack 1 var(--t) ease-in-out forwards;
 }
-.rotateB {
-    animation: rotateTo0 1 3s ease-in-out both;
+@keyframes rotateFrontBack {
+    to {
+        transform: rotateY(0deg);
+    }
 }
-.show {
-    transition: opacity .00001s;
-    transition-delay: 1.4s;
+.rotateBackFront {
+    animation: rotateBackFront 1 var(--t) ease-in-out forwards;
 }
-.hide {
-    transition: opacity .00001s;
-    transition-delay: 1.4s;
-}
-.resetRotation {
-    animation: reset 1 .00001s linear;
-    animation-delay: 4s;
+@keyframes rotateBackFront {
+    to {
+        transform: rotateY(180deg);
+    }
 }

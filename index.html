@@ -51,11 +51,18 @@
     }
 
     function animF(e) {
-        get('cardFront_1').addClass('rotate');
+        get('cardFront_1').addClass('rotateF');
         get('cardBack_1').addClass('rotateB');
     }
     function animB(e) {
-        // get('cardBack_1').addClass('rotateB');
+        // $('#cardBack_1').css('visibility', 'hidden');
+        get('cardBack_1').addClass('setRotated360');
+        get('cardBack_1').addClass('rotateBackFront');
+
+        get('cardFront_1').addClass('setRotated180');
+        get('cardFront_1').addClass('rotateFrontBack');
+
+
     }
 
 
