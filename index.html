@@ -13,8 +13,12 @@
 
 <script>   // TODO: Add PHPdoc, on window resize origin, krásný odlesky, -webkit- (safari), encapsulate whole script, nejsou některý třídy stejný?, click events could be simplified to .card, change front & back =:-o
     let cards;  // list of all cards elements
-    const CLOSED = 0, OPEN = 1, OPENING = 2, CLOSING = 3;
-    const states = [,,,,,].fill(CLOSED);
+    const CLOSED       =  'This is',
+          OPEN         =  'the best',
+          OPENING      =  'solution',
+          CLOSING      =  'of the task',
+          TO_BE_CLOSED =  'hire me :)';
+    const states = [,,,,,].fill(CLOSED);  // Holds the actual state of each card
     const cardDimensions = {x: 0, y: 0};
     const cardsContents = ['Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet'];
     const $i = $($('#info'));
@@ -72,11 +76,16 @@
         get(`cardShadow_${i}`).addClass('rotateShadow');
 
         // vzít všechny ostatní, zavolat na ně closeCard
-        // for (let ii = 0; ii < 5; ++ii) {
-        //
-        //     if (ii != i && states[ii] === 'open')
-        //         get(`cardBack_${ii}`).click();
-        // }
+        for (let ii = 0; ii < 5; ++ii) {
+            if (ii != i) {
+                if (states[ii] === OPEN) {
+                    get(`cardBack_${ii}`).click();
+                }
+                else if (states[ii] === OPENING) {
+                    states[ii] = TO_BE_CLOSED;
+                }
+            }
+        }
     }
 
     function closeCard(e) {
@@ -152,7 +161,11 @@
             setFlipListeners(i);
 
             get(`cardFront_${i}`).addEventListener('webkitAnimationEnd', () => {
-                if (states[i] === OPENING)
+                if (states[i] === TO_BE_CLOSED) {
+                    states[i] = OPEN;
+                    get(`cardBack_${i}`).click();
+                }
+                else if (states[i] === OPENING)
                     states[i] = OPEN
                 else if (states[i] === CLOSING)
                     states[i] = CLOSED
