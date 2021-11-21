@@ -60,26 +60,26 @@
         /* All of these must be called in particular order */
 
         // Set initial transformations before rotation
-        get(`cardFront_${i}`).removeClass('rotateFrontSide');
-        get(`cardFront_${i}`).removeClass('setRotated180');
-        get(`cardFront_${i}`).removeClass('rotateFrontToBack');
         get(`cardBack_${i}`).removeClass('rotateBackSide');
-        get(`cardBack_${i}`).removeClass('setRotated360');
+        get(`cardBack_${i}`).removeClass('setRotated180');
         get(`cardBack_${i}`).removeClass('rotateBackToFront');
+        get(`cardFront_${i}`).removeClass('rotateFrontSide');
+        get(`cardFront_${i}`).removeClass('setRotated360');
+        get(`cardFront_${i}`).removeClass('rotateFrontToBack');
         get(`cardShadow_${i}`).removeClass('rotateShadow');
-        get(`cardShadow_${i}`).removeClass('rotateShadowBack');
+        get(`cardShadow_${i}`).removeClass('rotateShadowFront');
         get(`cardShadow_${i}`).removeClass('setRotated180');
 
         // Rotate
-        get(`cardFront_${i}`).addClass('rotateFrontSide');
         get(`cardBack_${i}`).addClass('rotateBackSide');
+        get(`cardFront_${i}`).addClass('rotateFrontSide');
         get(`cardShadow_${i}`).addClass('rotateShadow');
 
         // vzít všechny ostatní, zavolat na ně closeCard
         for (let ii = 0; ii < 5; ++ii) {
             if (ii != i) {
                 if (states[ii] === OPEN) {
-                    get(`cardBack_${ii}`).click();
+                    get(`cardFront_${ii}`).click();
                 }
                 else if (states[ii] === OPENING) {
                     states[ii] = TO_BE_CLOSED;
@@ -99,19 +99,19 @@
         /* All of these must be called in particular order */
 
         // Set initial transformations before rotation
-        get(`cardBack_${i}`).addClass('setRotated360');
-        get(`cardBack_${i}`).addClass('rotateBackToFront');
+        get(`cardFront_${i}`).addClass('setRotated360');
+        get(`cardFront_${i}`).addClass('rotateFrontToBack');
         get(`cardShadow_${i}`).addClass('setRotated180');
 
         // Rotate
-        get(`cardFront_${i}`).addClass('setRotated180');
-        get(`cardFront_${i}`).addClass('rotateFrontToBack');
-        get(`cardShadow_${i}`).addClass('rotateShadowBack');
+        get(`cardBack_${i}`).addClass('setRotated180');
+        get(`cardBack_${i}`).addClass('rotateBackToFront');
+        get(`cardShadow_${i}`).addClass('rotateShadowFront');
     }
 
     setFlipListeners = (i) => {
-        get(`cardFront_${i}`).addEventListener(`click`, openCard);
-        get(`cardBack_${i}`).addEventListener(`click`, closeCard);
+        get(`cardBack_${i}`).addEventListener(`click`, openCard);
+        get(`cardFront_${i}`).addEventListener(`click`, closeCard);
     }
 
     // unsetFlipListeners = (i) => {
@@ -136,8 +136,8 @@
     for (let i = 0; i < 5; ++i) {
         const cardHTML =
             `<div class="card" id="card_${i}">` +
-            `    <div class="cardFront" id="cardFront_${i}" style="z-index: ${2*i+1}"></div>` +
-            `    <div class="cardBack" id="cardBack_${i}" style="z-index: ${2*i+1}">${cardsContents[i]}</div>` +
+            `    <div class="cardBack" id="cardBack_${i}" style="z-index: ${2*i+1}"></div>` +
+            `    <div class="cardFront" id="cardFront_${i}" style="z-index: ${2*i+1}">${cardsContents[i]}</div>` +
             `    <div class="cardShadow" id="cardShadow_${i}" style="z-index: ${2*i}"></div>` +
             `</div>`;
 
@@ -160,10 +160,10 @@
         newCardEl.addEventListener('webkitAnimationEnd', () => {
             setFlipListeners(i);
 
-            get(`cardFront_${i}`).addEventListener('webkitAnimationEnd', () => {
+            get(`cardBack_${i}`).addEventListener('webkitAnimationEnd', () => {
                 if (states[i] === TO_BE_CLOSED) {
                     states[i] = OPEN;
-                    get(`cardBack_${i}`).click();
+                    get(`cardFront_${i}`).click();
                 }
                 else if (states[i] === OPENING)
                     states[i] = OPEN

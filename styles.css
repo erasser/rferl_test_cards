@@ -15,7 +15,7 @@ body {
     height: 220px;
     perspective: 600px;
 }
-.cardFront, .cardBack {
+.cardBack, .cardFront {
     /*border: solid 1px black;*/
     border-radius: 10px;
     position: absolute;
@@ -24,10 +24,10 @@ body {
     cursor: pointer;
     box-sizing: border-box;
 }
-.cardFront {
+.cardBack {
     background: #666;
 }
-.cardBack {
+.cardFront {
     background: #eee;
     backface-visibility: hidden;
     transform: rotateY(180deg);
@@ -48,7 +48,7 @@ body {
     transform: rotateY(180deg);
 }
 /*********************  animations open card  *********************/
-.rotateFrontSide {
+.rotateBackSide {
     animation: rotateTo180 1 var(--t) ease-in-out forwards;
     backface-visibility: hidden;
 }
@@ -57,7 +57,7 @@ body {
         transform: rotateY(180deg);
     }
 }
-.rotateBackSide {
+.rotateFrontSide {
     animation: rotateTo360 1 var(--t) ease-in-out forwards;
 }
 @keyframes rotateTo360 {
@@ -78,26 +78,26 @@ body {
     }
 }
 /*********************  animations close card  ********************/
-.rotateFrontToBack {    /* TODO: ↓ Zkontrolovat */
-    animation: rotateFrontToBack 1 var(--t) ease-in-out forwards;
-}
-@keyframes rotateFrontToBack {
-    to {
-        transform: rotateY(0deg);
-    }
-}
-.rotateBackToFront {
+.rotateBackToFront {    /* TODO: ↓ Zkontrolovat */
     animation: rotateBackToFront 1 var(--t) ease-in-out forwards;
 }
 @keyframes rotateBackToFront {
     to {
+        transform: rotateY(0deg);
+    }
+}
+.rotateFrontToBack {
+    animation: rotateFrontToBack 1 var(--t) ease-in-out forwards;
+}
+@keyframes rotateFrontToBack {
+    to {
         transform: rotateY(180deg);
     }
 }
-.rotateShadowBack {
-    animation: rotateShadowBack 1 var(--t) ease-in-out forwards;
+.rotateShadowFront {
+    animation: rotateShadowFront 1 var(--t) ease-in-out forwards;
 }
-@keyframes rotateShadowBack {
+@keyframes rotateShadowFront {
     50% {
         opacity: .2;
     }
