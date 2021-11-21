@@ -11,17 +11,18 @@ body {
 }
 .card {
     position: absolute;
-    width: 100px;
-    height: 200px;
+    width: 140px;
+    height: 220px;
     perspective: 600px;
 }
 .cardFront, .cardBack {
-    border: solid 3px black;
+    /*border: solid 1px black;*/
     border-radius: 10px;
     position: absolute;
     width: 100%;
     height: 100%;
     cursor: pointer;
+    box-sizing: border-box;
 }
 .cardFront {
     background: #666;
@@ -30,6 +31,7 @@ body {
     background: #eee;
     backface-visibility: hidden;
     transform: rotateY(180deg);
+    padding: 5px;
 }
 .cardShadow {
     position: absolute;
@@ -37,7 +39,7 @@ body {
     height: 100%;
     border-radius: 10px;
     background: #0004;
-    box-shadow: 0 0 8px 8px #0004;
+    box-shadow: 0 0 6px 6px #0004;
 }
 .setRotated360 {
     transform: rotateY(360deg);
@@ -112,6 +114,7 @@ body {
     to {         /*transform: translate3d(200%, 200px, 0);*/
         top: 50vh;
         left: 10vw;
+        transform: rotateZ(720deg);
     }
 }
 .deal2st {
@@ -121,6 +124,7 @@ body {
     to {
         top: 50vh;
         left: 20vw;
+        transform: rotateZ(720deg);
     }
 }
 .deal3st {
@@ -130,6 +134,7 @@ body {
     to {
         top: 50vh;
         left: 30vw;
+        transform: rotateZ(720deg);
     }
 }
 .deal4st {
@@ -139,6 +144,7 @@ body {
     to {
         top: 50vh;
         left: 40vw;
+        transform: rotateZ(720deg);
     }
 }
 .deal5st {
@@ -148,6 +154,6 @@ body {
     to {
         top: 50vh;
         left: 50vw;
+        transform: rotateZ(720deg);
     }
 }
-

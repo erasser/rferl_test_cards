@@ -12,7 +12,9 @@
 </body>
 
 <script>   // TODO: Add PHPdoc, on window resize origin, krásný odlesky, -webkit- (safari), encapsulate whole script, nejsou některý třídy stejný?, click events could be simplified to .card, change front & back =:-o
-    const cards = document.getElementsByClassName('card');
+    let cards;  // list of all cards elements
+    const CLOSED = 0, OPEN = 1, OPENING = 2, CLOSING = 3;
+    const states = [,,,,,].fill(CLOSED);
     const cardDimensions = {x: 0, y: 0};
     const cardsContents = ['Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet'];
     const $i = $($('#info'));
@@ -45,7 +47,11 @@
 
     function openCard(e) {
         let i = e.target.id.split('_')[1];
-        unsetFlipListeners(i);
+        if (states[i] !== CLOSED)
+            return;
+
+        states[i] = OPENING;
+        // unsetFlipListeners(i);
 
         /* All of these must be called in particular order */
 
@@ -64,11 +70,22 @@
         get(`cardFront_${i}`).addClass('rotateFrontSide');
         get(`cardBack_${i}`).addClass('rotateBackSide');
         get(`cardShadow_${i}`).addClass('rotateShadow');
+
+        // vzít všechny ostatní, zavolat na ně closeCard
+        // for (let ii = 0; ii < 5; ++ii) {
+        //
+        //     if (ii != i && states[ii] === 'open')
+        //         get(`cardBack_${ii}`).click();
+        // }
     }
 
     function closeCard(e) {
         let i = e.target.id.split('_')[1];
-        unsetFlipListeners(i);
+        if (states[i] !== OPEN)
+            return;
+
+        states[i] = CLOSING;
+        // unsetFlipListeners(i);
 
         /* All of these must be called in particular order */
 
@@ -88,10 +105,10 @@
         get(`cardBack_${i}`).addEventListener(`click`, closeCard);
     }
 
-    unsetFlipListeners = (i) => {
-        get(`cardFront_${i}`).removeEventListener(`click`, openCard);
-        get(`cardBack_${i}`).removeEventListener(`click`, closeCard);
-    }
+    // unsetFlipListeners = (i) => {
+    //     get(`cardFront_${i}`).removeEventListener(`click`, openCard);
+    //     get(`cardBack_${i}`).removeEventListener(`click`, closeCard);
+    // }
 
     dealCards = () => {
         get(`card_4`).addClass('deal1st');
@@ -100,9 +117,9 @@
         get(`card_1`).addClass('deal4st');
         get(`card_0`).addClass('deal5st');
 
-        for (let card of document.getElementsByClassName('card')) {
-            card.removeEventListener('click', dealCards);
-        }
+        // for (let card of document.getElementsByClassName('card')) {
+        //     card.removeEventListener('click', dealCards);
+        // }
     };
 
     // Generate cards
@@ -135,11 +152,17 @@
             setFlipListeners(i);
 
             get(`cardFront_${i}`).addEventListener('webkitAnimationEnd', () => {
-                setFlipListeners(i);
+                if (states[i] === OPENING)
+                    states[i] = OPEN
+                else if (states[i] === CLOSING)
+                    states[i] = CLOSED
+                // setFlipListeners(i);
             });
         });
+
     }
 
+    cards = document.getElementsByClassName('card');
 
 
 
