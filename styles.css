@@ -1,11 +1,13 @@
-:root {--t: 1s;}
+:root {--t: 1s; --tt: 1s}
 body {
+    margin: 0;
     background: #105d79;
     font-family: Calibri, serif;
     font-size: 24px;
 }
 #origin {
     position: absolute;
+    perspective: 600px;
 }
 .card {
     position: absolute;
@@ -74,7 +76,7 @@ body {
     }
 }
 /*********************  animations close card  ********************/
-.rotateFrontToBack {
+.rotateFrontToBack {    /* TODO: ↓ Zkontrolovat */
     animation: rotateFrontToBack 1 var(--t) ease-in-out forwards;
 }
 @keyframes rotateFrontToBack {
@@ -102,3 +104,50 @@ body {
         transform: rotateY(0deg);
     }
 }
+/*********************  animations deal cards  ********************/
+.deal1st {
+    animation: deal1st var(--tt) ease-in-out forwards;
+}
+@keyframes deal1st {
+    to {         /*transform: translate3d(200%, 200px, 0);*/
+        top: 50vh;
+        left: 10vw;
+    }
+}
+.deal2st {
+    animation: deal2st var(--tt) ease-in-out .25s forwards;
+}
+@keyframes deal2st {
+    to {
+        top: 50vh;
+        left: 20vw;
+    }
+}
+.deal3st {
+    animation: deal3st var(--tt) ease-in-out .5s forwards;
+}
+@keyframes deal3st {
+    to {
+        top: 50vh;
+        left: 30vw;
+    }
+}
+.deal4st {
+    animation: deal4st var(--tt) ease-in-out .75s forwards;
+}
+@keyframes deal4st {
+    to {
+        top: 50vh;
+        left: 40vw;
+    }
+}
+.deal5st {
+    animation: deal5st var(--tt) ease-in-out 1s forwards;
+}
+@keyframes deal5st {
+    to {
+        top: 50vh;
+        left: 50vw;
+    }
+}
+

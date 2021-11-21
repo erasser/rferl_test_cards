@@ -40,11 +40,12 @@
     };
 
     get('origin').style.left = window.innerWidth / 5 + 'px';
-    get('origin').style.top = window.innerHeight / 5 + 'px';
+    // get('origin').style.top = window.innerHeight / 7 + 'px';
+    get('origin').style.top = '30px';
 
     function openCard(e) {
         let i = e.target.id.split('_')[1];
-        // unsetFlipListeners(i);
+        unsetFlipListeners(i);
 
         /* All of these must be called in particular order */
 
@@ -67,7 +68,7 @@
 
     function closeCard(e) {
         let i = e.target.id.split('_')[1];
-        // unsetFlipListeners(i);
+        unsetFlipListeners(i);
 
         /* All of these must be called in particular order */
 
@@ -82,13 +83,6 @@
         get(`cardShadow_${i}`).addClass('rotateShadowBack');
     }
 
-    // function animate() {
-    //     requestAnimationFrame(animate);
-        // $i.text($('#card_1').css('animationPlayState'));
-        // $i.text($('#cardBack_1').attr('class'));
-    // }
-    // animate();
-
     setFlipListeners = (i) => {
         get(`cardFront_${i}`).addEventListener(`click`, openCard);
         get(`cardBack_${i}`).addEventListener(`click`, closeCard);
@@ -99,8 +93,16 @@
         get(`cardBack_${i}`).removeEventListener(`click`, closeCard);
     }
 
-    dealCards = (i) => {
-        console.log(i);
+    dealCards = () => {
+        get(`card_4`).addClass('deal1st');
+        get(`card_3`).addClass('deal2st');
+        get(`card_2`).addClass('deal3st');
+        get(`card_1`).addClass('deal4st');
+        get(`card_0`).addClass('deal5st');
+
+        for (let card of document.getElementsByClassName('card')) {
+            card.removeEventListener('click', dealCards);
+        }
     };
 
     // Generate cards
@@ -121,23 +123,23 @@
             updateCardDimensions();
 
         const angle = angleSegment * i;
-        let x = Math.cos(angle) * 20 + cardDimensions.x / 2 + rndSign() * 4 * Math.random();
-        let y = Math.sin(angle) * 10 + cardDimensions.y / 2 + rndSign() * 4 * Math.random();
+        const x = Math.cos(angle) * 20 + cardDimensions.x / 2 + rndSign() * 4 * Math.random();
+        const y = Math.sin(angle) * 10 + cardDimensions.y / 2 + rndSign() * 4 * Math.random();
         const newCardEl = get(`card_${i}`);
         newCardEl.style.left = x + 'px';
         newCardEl.style.top = y + 'px';
 
-        get(`cardFront_${i}`).addEventListener('click', () => dealCards(i));
+        newCardEl.addEventListener('click', dealCards);
 
+        newCardEl.addEventListener('webkitAnimationEnd', () => {
+            setFlipListeners(i);
 
-        // setFlipListeners(i);
-        //
-        // get(`cardFront_${i}`).addEventListener('webkitAnimationEnd', () => {
-        //     setFlipListeners(i);
-        // });
-
-
+            get(`cardFront_${i}`).addEventListener('webkitAnimationEnd', () => {
+                setFlipListeners(i);
+            });
+        });
     }
+
 
 
 
