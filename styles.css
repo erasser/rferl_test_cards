@@ -1,9 +1,9 @@
-:root {--t: 1s; --tt: 1s}
+:root {--t: .5s; --tt: .5s}
 body {
     margin: 0;
     background: #105d79;
     font-family: Calibri, serif;
-    font-size: 24px;
+    font-size: 20px;
 }
 #origin {
     position: absolute;
@@ -15,7 +15,7 @@ body {
     height: 220px;
     perspective: 600px;
 }
-.cardBack, .cardFront {
+.cardBack, .cardFront, .cardOverlay, .cardText {
     /*border: solid 1px black;*/
     border-radius: 10px;
     position: absolute;
@@ -28,10 +28,25 @@ body {
     background: #666;
 }
 .cardFront {
-    background: #eee;
+    background: #fff;
     backface-visibility: hidden;
     transform: rotateY(180deg);
-    padding: 5px;
+    /*overflow: hidden;*/
+    /*padding: 4px 6px;*/
+    /*padding-right: 17px; !* Increase/decrease this value for cross-browser compatibility *!*/
+    /*box-sizing: content-box; !* So the width will be 100% + 17px *!*/
+    /*overflow-y: scroll;*/
+    /*margin-right: -50px; !* maximum width of scrollbar *!*/
+}
+.cardOverlay {
+    background: linear-gradient(to bottom, #ffff 0%, #fff0 20%, #fff0 80%, #ffff 100%);
+
+}
+.cardText {
+    background: #fff;
+    user-select: none;
+    padding: 4px 6px;
+    overflow: hidden;
 }
 .cardShadow {
     position: absolute;

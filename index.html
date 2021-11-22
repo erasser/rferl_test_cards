@@ -11,7 +11,7 @@
 <div id="info" style="font-size: 32px"></div>
 </body>
 
-<script>   // TODO: Add PHPdoc, on window resize origin, krásný odlesky, -webkit- (safari), encapsulate whole script, nejsou některý třídy stejný?, click events could be simplified to .card, change front & back =:-o
+<script>   // TODO: Add PHPdoc, on window resize origin, krásný odlesky, -webkit- (safari), encapsulate whole script, nejsou některý třídy stejný?, click events could be simplified to .card, switch theme feature
     let cards;  // list of all cards elements
     const CLOSED       =  'This is',
           OPEN         =  'the best',
@@ -20,7 +20,7 @@
           TO_BE_CLOSED =  'hire me :)';
     const states = [,,,,,].fill(CLOSED);  // Holds the actual state of each card
     const cardDimensions = {x: 0, y: 0};
-    const cardsContents = ['Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet'];
+    const cardsContents = ['Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet...'];
     const $i = $($('#info'));
 
     get = (id) => {
@@ -111,7 +111,7 @@
 
     setFlipListeners = (i) => {
         get(`cardBack_${i}`).addEventListener(`click`, openCard);
-        get(`cardFront_${i}`).addEventListener(`click`, closeCard);
+        // get(`cardFront_${i}`).addEventListener(`click`, closeCard);
     }
 
     // unsetFlipListeners = (i) => {
@@ -136,9 +136,12 @@
     for (let i = 0; i < 5; ++i) {
         const cardHTML =
             `<div class="card" id="card_${i}">` +
-            `    <div class="cardBack" id="cardBack_${i}" style="z-index: ${2*i+1}"></div>` +
-            `    <div class="cardFront" id="cardFront_${i}" style="z-index: ${2*i+1}">${cardsContents[i]}</div>` +
-            `    <div class="cardShadow" id="cardShadow_${i}" style="z-index: ${2*i}"></div>` +
+            `    <div class="cardBack" id="cardBack_${i}" style="z-index: ${3 * i + 1}"></div>` +
+            `    <div class="cardFront" id="cardFront_${i}" style="z-index: ${3 * i + 1}">` +
+            `        <div class="cardOverlay" id="cardOverlay_${i}" style="z-index: ${3 * i + 2}"></div>` +
+            `        <div class="cardText" id="cardText_${i}">${cardsContents[i]}</div>` +
+            `    </div>` +
+            `    <div class="cardShadow" id="cardShadow_${i}" style="z-index: ${3 * i}"></div>` +
             `</div>`;
 
         const newCard = document.createElement('template');
@@ -169,7 +172,6 @@
                     states[i] = OPEN
                 else if (states[i] === CLOSING)
                     states[i] = CLOSED
-                // setFlipListeners(i);
             });
         });
 
@@ -178,6 +180,44 @@
     cards = document.getElementsByClassName('card');
 
 
+    /***  Scrolling  ***/
+
+    // TODO: Kinetic scrolling
+
+    let clicked = false;
+    let scrolling = false;
+    let lastY;
+    let clickedTime;
+
+    const $cardOverlay = $('#cardOverlay_4');
+    const $cardText = $('#cardText_4');
+
+    $cardOverlay.on('mousedown', () => {
+        // scrolling = true;
+        // lastY = event.clientY;
+        clicked = true;
+        clickedTime = performance.now();
+    });
+    $cardOverlay.on('mouseup', () => {  // TODO: Sloučit s eventem na rotate, odstranit click
+        // if (performance.now() - clickedTime > 300) {
+        //     scrolling = false;
+        // }
+    });
+    $cardOverlay.on('mousemove', () => {
+        if (!clicked) return;
+
+        // if (clicked) {
+        //
+        // }
+        // console.log('scrolling');
+        let cursorY = event.clientY;
+        let scrollTop = $cardText.scrollTop();
+        let delta = lastY - cursorY;
+        lastY = cursorY;
+
+        console.log(scrollTop + delta);
+        $cardText.scrollTop(scrollTop + delta);
+    });
 
 </script>
 
