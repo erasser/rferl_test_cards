@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Cards</title>
-    <link rel="stylesheet" href="styles.css?1">
+    <link rel="stylesheet" href="styles.css?3">
     <script src="jquery-1.11.1.min.js"></script>
 </head>
 <body>
@@ -202,12 +202,14 @@ window.location.hash = Date.now();  // clear cache
 
     function setScrollingListeners(i) {
         if (states[i] !== OPEN) return;
-        const $cardOverlay = $(`#cardOverlay_${i}`);
-        // const $cardFront = $(`#cardFront_${i}`);
-        const $cardText = $(`#cardText_${i}`);
+        const cardOverlay = get(`cardOverlay_${i}`);
+        // const $cardFront = $(`cardFront_${i}`);
+        const cardText = get(`cardText_${i}`);
 
-        $cardOverlay.on('mousedown', () => {
-            // $i.text('down');
+        cardOverlay.addEventListener('touchstart', () => {console.log('touch start')}, false);
+        cardOverlay.addEventListener('touchend', () => {console.log('touch end')}, false);
+
+        cardOverlay.addEventListener('mousedown', () => {
             if (event.button === 2) {  // TODO: Make it better when mobile works
                 return;
             }
@@ -215,13 +217,16 @@ window.location.hash = Date.now();  // clear cache
             clicked = true;
             scrolling = false;
 
-            $('#origin').on('select', () => $i.text('select'));  // TODO: Remove
+            get('origin').addEventListener('select', () => $i.text('select'));  // TODO: Remove
         });
 
         if (!originEventSet) {
-            $i.text('up');
-            $('#origin').on('mouseup', () => {  // TODO: To by chtělo nastavit jen jednou
+            // $i.text('up');
+            get('origin').addEventListener('mouseup', () => {  // TODO: To by chtělo nastavit jen jednou
                 console.log('up');
+                if (event.button === 2) {  // TODO: Make it better when mobile works
+                    return;
+                }
                 if (!scrolling) {
                     closeCard();
                 }
@@ -231,25 +236,26 @@ window.location.hash = Date.now();  // clear cache
             });
         }
 
-        $cardOverlay.on('mousemove', () => {
-            $i.text('move');
+        cardOverlay.addEventListener('mousemove', () => {
+            // $i.text('move');
             if (!clicked) return;
             if (!scrolling) {
                 scrolling = true;
             }
             let cursorY = event.clientY;
-            let scrollTop = $cardText.scrollTop();
+            // let scrollTop = cardText.scrollTop();
             let delta = lastY - cursorY;
             lastY = cursorY;
 // $.text(delta);
-            $cardText.scrollTop(scrollTop + delta);
+//             cardText.scrollTop(scrollTop + delta);
+            cardText.scrollBy(0, delta);
         });
 
         // This solves a situation, when a user tries to drag a card to a side
         // (I.e. moves the mouse just horizontally and the browser starts element dragging)
         // $cardFront.on('drag', () => clicked = false);
 
-        // $cardOverlay.on('select', () => console.log('select'));
+        // cardOverlay.on('select', () => console.log('select'));
     }
 </script>
 

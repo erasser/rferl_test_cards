@@ -1,10 +1,16 @@
 :root {--t: .5s; --tt: .5s}
 body {
     margin: 0;
-    background: #103d33;
+    background: #301d33;
     font-family: Calibri, serif;
     font-size: 20px;
-    line-height: .95;
+    line-height: 1.95;  /* TODO .95 */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: #0000;
 }
 #origin {
     width: 100%;
@@ -40,7 +46,6 @@ body {
 }
 .cardText {
     background: #fff;
-    user-select: none;
     padding: 0 6px;
     overflow: hidden;
 }
