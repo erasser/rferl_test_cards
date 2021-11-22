@@ -6,6 +6,8 @@ body {
     font-size: 20px;
 }
 #origin {
+    width: 100%;
+    height: 100%;
     position: absolute;
     perspective: 600px;
 }
@@ -31,12 +33,6 @@ body {
     background: #fff;
     backface-visibility: hidden;
     transform: rotateY(180deg);
-    /*overflow: hidden;*/
-    /*padding: 4px 6px;*/
-    /*padding-right: 17px; !* Increase/decrease this value for cross-browser compatibility *!*/
-    /*box-sizing: content-box; !* So the width will be 100% + 17px *!*/
-    /*overflow-y: scroll;*/
-    /*margin-right: -50px; !* maximum width of scrollbar *!*/
 }
 .cardOverlay {
     background: linear-gradient(to bottom, #ffff 0%, #fff0 20%, #fff0 80%, #ffff 100%);

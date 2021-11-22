@@ -187,37 +187,39 @@
     let clicked = false;
     let scrolling = false;
     let lastY;
-    let clickedTime;
 
     const $cardOverlay = $('#cardOverlay_4');
     const $cardText = $('#cardText_4');
 
     $cardOverlay.on('mousedown', () => {
-        // scrolling = true;
-        // lastY = event.clientY;
+        lastY = event.clientY;
         clicked = true;
-        clickedTime = performance.now();
+        scrolling = false;
     });
-    $cardOverlay.on('mouseup', () => {  // TODO: Sloučit s eventem na rotate, odstranit click
-        // if (performance.now() - clickedTime > 300) {
-        //     scrolling = false;
-        // }
+    $('#origin').on('mouseup', () => {  // TODO: Sloučit s eventem na rotate, odstranit click
+        if (!scrolling) {
+            console.log('flip card!')
+        }
+        clicked = false;
+        scrolling = false;
+        console.log('mouse up');
     });
     $cardOverlay.on('mousemove', () => {
         if (!clicked) return;
-
-        // if (clicked) {
-        //
-        // }
-        // console.log('scrolling');
+        if (!scrolling) {
+            scrolling = true;
+        }
         let cursorY = event.clientY;
         let scrollTop = $cardText.scrollTop();
         let delta = lastY - cursorY;
         lastY = cursorY;
 
-        console.log(scrollTop + delta);
         $cardText.scrollTop(scrollTop + delta);
     });
+
+    // This solves a situation, when a user tries to drag a card to a side
+    // (I.e. moves the mouse just horizontally and the browser starts element dragging)
+    $cardOverlay.on('drag', () => clicked = false);
 
 </script>
 
