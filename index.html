@@ -20,7 +20,7 @@
           TO_BE_CLOSED =  'hire me :)';
     const states = [,,,,,].fill(CLOSED);  // Holds the actual state of each card
     const cardDimensions = {x: 0, y: 0};
-    const cardsContents = ['Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet...'];
+    const cardsContents = ['Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... ', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet...'];
     const $i = $($('#info'));
 
 
@@ -54,8 +54,8 @@
 
     /***  Cards flipping functions  ***/
 
-    function openCard(e) {
-        let i = e.target.id.split('_')[1];
+    function openCard() {
+        let i = event.target.id.split('_')[1];
         if (states[i] !== CLOSED) {
             return;
         }
@@ -83,7 +83,8 @@
         for (let ii = 0; ii < 5; ++ii) {
             if (ii != i) {
                 if (states[ii] === OPEN) {
-                    get(`cardFront_${ii}`).click();
+                    // get(`cardFront_${ii}`).click();
+                    closeCard(ii);
                 }
                 else if (states[ii] === OPENING) {
                     states[ii] = TO_BE_CLOSED;
@@ -92,8 +93,9 @@
         }
     }
 
-    function closeCard(e) {
-        let i = e.target.id.split('_')[1];
+    function closeCard(closeCardId) {
+        let i = closeCardId === null ? event.target.id.split('_')[1] : closeCardId;
+
         if (states[i] !== OPEN) {
             return;
         }
@@ -144,22 +146,22 @@
             updateCardDimensions();
         }
 
+        const newCardEl = get(`card_${i}`);
         const angle = angleSegment * i;
         const x = Math.cos(angle) * 20 + cardDimensions.x / 2 + rndSign() * 4 * Math.random();
         const y = Math.sin(angle) * 10 + cardDimensions.y / 2 + rndSign() * 4 * Math.random();
-        const newCardEl = get(`card_${i}`);
+
         newCardEl.style.left = x + 'px';
         newCardEl.style.top = y + 'px';
 
+        /* Set listener for initial cards dealing */
         newCardEl.addEventListener('click', dealCards);
 
+        /* Listeners that need to be set after cards dealing */
         newCardEl.addEventListener('webkitAnimationEnd', () => {
 
-            /* Set scrolling event listeners */
-            setScrollingListeners();
-
             /* Set flip card event listeners */
-            get(`cardFront_${i}`).addEventListener(`click`, closeCard);
+            get(`cardBack_${i}`).addEventListener(`click`, openCard);
 
             get(`cardBack_${i}`).addEventListener('webkitAnimationEnd', () => {
                 if (states[i] === TO_BE_CLOSED) {
@@ -172,6 +174,9 @@
                 else if (states[i] === CLOSING) {
                     states[i] = CLOSED;
                 }
+
+                /* Set scrolling event listeners */
+                setScrollingListeners(i);
             });
         });
     }
@@ -181,33 +186,39 @@
 
     /***  Cards scrolling  ***/
 
+    // TODO: Dvojklikem se dá označit text, nefunguje potom scrolling
+    // TODO: Show gradient only when it's possible to scroll
     // TODO: Kinetic scrolling
 
-    function setScrollingListeners() {
+    let originEventSet;
+    let clicked = false;
+    let scrolling = false;
+    let lastY;
 
-        let clicked = false;
-        let scrolling = false;
-        let lastY;
+    function setScrollingListeners(i) {
+        //const $cardOverlay = $(`#cardOverlay_${i}`);
+        const $cardFront = $(`#cardFront_${i}`);
+        const $cardText = $(`#cardText_${i}`);
 
-        const $cardOverlay = $('#cardOverlay_4');
-        const $cardText = $('#cardText_4');
-
-        $cardOverlay.on('mousedown', () => {
+        $cardFront.on('mousedown', () => {
             lastY = event.clientY;
             clicked = true;
             scrolling = false;
         });
 
-        $('#origin').on('mouseup', () => {  // TODO: Sloučit s eventem na rotate, odstranit click
-            if (!scrolling) {
-                console.log('open card');
-                //openCard();
-            }
-            clicked = false;
-            scrolling = false;
-        });
+        if (!originEventSet) {
+            $('#origin').on('mouseup', () => {  // TODO: To by chtělo nastavit jen jednou
+                if (!scrolling) {
+                    // console.log('close card ' + i);
+                    closeCard();
+                }
+                clicked = false;
+                scrolling = false;
+                originEventSet = true;
+            });
+        }
 
-        $cardOverlay.on('mousemove', () => {
+        $cardFront.on('mousemove', () => {
             if (!clicked) return;
             if (!scrolling) {
                 scrolling = true;
@@ -222,7 +233,7 @@
 
         // This solves a situation, when a user tries to drag a card to a side
         // (I.e. moves the mouse just horizontally and the browser starts element dragging)
-        $cardOverlay.on('drag', () => clicked = false);
+        $cardFront.on('drag', () => clicked = false);
     }
 </script>
 

@@ -4,6 +4,7 @@ body {
     background: #105d79;
     font-family: Calibri, serif;
     font-size: 20px;
+    line-height: .95;
 }
 #origin {
     width: 100%;
@@ -35,13 +36,12 @@ body {
     transform: rotateY(180deg);
 }
 .cardOverlay {
-    background: linear-gradient(to bottom, #ffff 0%, #fff0 20%, #fff0 80%, #ffff 100%);
-
+    background: linear-gradient(to bottom, #ffff 1%, #fff0 22%, #fff0 78%, #ffff 99%);
 }
 .cardText {
     background: #fff;
     user-select: none;
-    padding: 4px 6px;
+    padding: 0 6px;
     overflow: hidden;
 }
 .cardShadow {
