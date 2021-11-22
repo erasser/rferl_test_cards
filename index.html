@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Cards</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?1">
     <script src="jquery-1.11.1.min.js"></script>
 </head>
 <body>
@@ -20,9 +20,10 @@
           TO_BE_CLOSED =  'hire me :)';
     const states = [,,,,,].fill(CLOSED);  // Holds the actual state of each card
     const cardDimensions = {x: 0, y: 0};
-    const cardsContents = ['Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... ', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet...'];
+    const cardsContents = ['Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... ', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet...'];
     const $i = $($('#info'));
-
+$i.css('font-size', '40px').css('color', 'gold').css('font-weight', 'bold');
+window.location.hash = Date.now();  // clear cache
 
     /***  Global functions  ***/
 
@@ -84,6 +85,7 @@
             if (ii != i) {
                 if (states[ii] === OPEN) {
                     // get(`cardFront_${ii}`).click();
+                    console.log('closing other card ' + ii);
                     closeCard(ii);
                 }
                 else if (states[ii] === OPENING) {
@@ -94,7 +96,7 @@
     }
 
     function closeCard(closeCardId) {
-        let i = closeCardId === null ? event.target.id.split('_')[1] : closeCardId;
+        let i = closeCardId === undefined ? event.target.id.split('_')[1] : closeCardId;
 
         if (states[i] !== OPEN) {
             return;
@@ -187,6 +189,9 @@
     /***  Cards scrolling  ***/
 
     // TODO: Dvojklikem se dá označit text, nefunguje potom scrolling
+    // TODO: Když se dvojklikem otočí karta, nejde scrollovat
+    // TODO: grab cursor
+    // TODO: fix mobile
     // TODO: Show gradient only when it's possible to scroll
     // TODO: Kinetic scrolling
 
@@ -196,20 +201,28 @@
     let lastY;
 
     function setScrollingListeners(i) {
-        //const $cardOverlay = $(`#cardOverlay_${i}`);
-        const $cardFront = $(`#cardFront_${i}`);
+        if (states[i] !== OPEN) return;
+        const $cardOverlay = $(`#cardOverlay_${i}`);
+        // const $cardFront = $(`#cardFront_${i}`);
         const $cardText = $(`#cardText_${i}`);
 
-        $cardFront.on('mousedown', () => {
+        $cardOverlay.on('mousedown', () => {
+            // $i.text('down');
+            if (event.button === 2) {  // TODO: Make it better when mobile works
+                return;
+            }
             lastY = event.clientY;
             clicked = true;
             scrolling = false;
+
+            $('#origin').on('select', () => $i.text('select'));  // TODO: Remove
         });
 
         if (!originEventSet) {
+            $i.text('up');
             $('#origin').on('mouseup', () => {  // TODO: To by chtělo nastavit jen jednou
+                console.log('up');
                 if (!scrolling) {
-                    // console.log('close card ' + i);
                     closeCard();
                 }
                 clicked = false;
@@ -218,7 +231,8 @@
             });
         }
 
-        $cardFront.on('mousemove', () => {
+        $cardOverlay.on('mousemove', () => {
+            $i.text('move');
             if (!clicked) return;
             if (!scrolling) {
                 scrolling = true;
@@ -227,13 +241,15 @@
             let scrollTop = $cardText.scrollTop();
             let delta = lastY - cursorY;
             lastY = cursorY;
-
+// $.text(delta);
             $cardText.scrollTop(scrollTop + delta);
         });
 
         // This solves a situation, when a user tries to drag a card to a side
         // (I.e. moves the mouse just horizontally and the browser starts element dragging)
-        $cardFront.on('drag', () => clicked = false);
+        // $cardFront.on('drag', () => clicked = false);
+
+        // $cardOverlay.on('select', () => console.log('select'));
     }
 </script>
 

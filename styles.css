@@ -1,7 +1,7 @@
 :root {--t: .5s; --tt: .5s}
 body {
     margin: 0;
-    background: #105d79;
+    background: #103d33;
     font-family: Calibri, serif;
     font-size: 20px;
     line-height: .95;
@@ -14,8 +14,8 @@ body {
 }
 .card {
     position: absolute;
-    width: 140px;
-    height: 220px;
+    width: 200px;
+    height: 400px;
     perspective: 600px;
 }
 .cardBack, .cardFront, .cardOverlay, .cardText {
