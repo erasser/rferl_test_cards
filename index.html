@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <title>Cards</title>
-    <link rel="stylesheet" href="styles.css?3">
+    <link rel="stylesheet" href="styles.css?5">
     <script src="jquery-1.11.1.min.js"></script>
 </head>
 <body>
@@ -185,7 +185,7 @@ window.location.hash = Date.now();  // clear cache
                     states[i] = CLOSED;
                 }
             });
-        });
+        }, {once: true});
     }
 
     cards = document.getElementsByClassName('card');
@@ -195,7 +195,7 @@ window.location.hash = Date.now();  // clear cache
 
     // TODO: Dvojklikem se dá označit text, nefunguje potom scrolling
     // TODO: Když se dvojklikem otočí karta, nejde scrollovat
-    // TODO: grab cursor
+    // TODO: grab cursor - nepůjde
     // TODO: fix mobile
     // TODO: Show gradient only when it's possible to scroll
     // TODO: Kinetic scrolling
@@ -206,9 +206,21 @@ window.location.hash = Date.now();  // clear cache
     let scrolling = false;
     let lastY;
 
-    function setScrollingListeners(i) {
-        // console.log('setting listeners');
-        if (states[i] !== OPEN) return;
+    get('origin') /*cardOverlay*/ .addEventListener('mouseup', () => {
+        if (event.button === 2) {  // TODO: Make it better when mobile works
+            return;
+        }
+        if (!scrolling) {
+            closeCard();
+        }
+        clicked = false;
+        scrolling = false;
+        // originEventSet = true;
+    });
+
+
+function setScrollingListeners(i) {
+        // if (states[i] !== OPEN) return;
         const cardOverlay = get(`cardOverlay_${i}`);
         // const $cardFront = $(`cardFront_${i}`);
         const cardText = get(`cardText_${i}`);
@@ -225,24 +237,17 @@ window.location.hash = Date.now();  // clear cache
             clicked = true;
             scrolling = false;
 
-            get('origin').addEventListener('select', () => I('select'));  // TODO: Remove
+            // get('origin').addEventListener('select', () => I('select'));  // TODO: Remove
         });
 
-        if (!originEventSet) {
-            // $i.text('up');
-            get('origin').addEventListener('mouseup', () => {  // TODO: To by chtělo nastavit jen jednou
-                console.log('up');
-                if (event.button === 2) {  // TODO: Make it better when mobile works
-                    return;
-                }
-                if (!scrolling) {
-                    closeCard();
-                }
-                clicked = false;
-                scrolling = false;
-                originEventSet = true;
-            });
-        }
+        // if (!originEventSet) {
+        // ...
+        // }
+
+        // get(`card_${i}`).addEventListener('mouseup', () => {
+            // event.preventDefault();
+            // event.cancelBubble = true;
+        // });
 
         cardOverlay.addEventListener('mousemove', () => {
             // $i.text('move');

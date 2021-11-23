@@ -3,7 +3,7 @@ body {
     margin: 0;
     width: 100%;
     height: 100%;
-    background: #301d33;
+    background: #105063;
     font-family: Calibri, serif;
     font-size: 20px;
     line-height: 1.95;  /* TODO .95 */
@@ -22,9 +22,10 @@ body {
 }
 .card {
     position: absolute;
-    width: 200px;
-    height: 400px;
+    width: 100px;
+    height: 200px;
     perspective: 600px;
+    cursor: pointer;
 }
 .cardBack, .cardFront, .cardOverlay, .cardText {
     /*border: solid 1px black;*/
@@ -32,7 +33,6 @@ body {
     position: absolute;
     width: 100%;
     height: 100%;
-    cursor: pointer;
     box-sizing: border-box;
 }
 .cardBack {
@@ -130,7 +130,7 @@ body {
 }
 @keyframes deal1st {
     to {         /*transform: translate3d(200%, 200px, 0);*/
-        top: 50vh;
+        top: 10vh;
         left: 10vw;
         transform: rotateZ(720deg);
     }
@@ -140,7 +140,7 @@ body {
 }
 @keyframes deal2st {
     to {
-        top: 50vh;
+        top: 10vh;
         left: 20vw;
         transform: rotateZ(720deg);
     }
@@ -150,7 +150,7 @@ body {
 }
 @keyframes deal3st {
     to {
-        top: 50vh;
+        top: 10vh;
         left: 30vw;
         transform: rotateZ(720deg);
     }
@@ -160,7 +160,7 @@ body {
 }
 @keyframes deal4st {
     to {
-        top: 50vh;
+        top: 10vh;
         left: 40vw;
         transform: rotateZ(720deg);
     }
@@ -170,7 +170,7 @@ body {
 }
 @keyframes deal5st {
     to {
-        top: 50vh;
+        top: 10vh;
         left: 50vw;
         transform: rotateZ(720deg);
     }
