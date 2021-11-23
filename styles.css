@@ -1,7 +1,7 @@
 :root {
-    --dealDuration: .7s;
+    --dealDuration: .8s;
     --flipDuration: .3s;
-    --cardHeight: 26vw;
+    --cardHeight: 24vw;
     --cardWidth: calc(var(--cardHeight) * 2/3);
     --cardMinusHalfWidth: calc(var(--cardWidth) / -2);
 }
@@ -48,7 +48,10 @@ body {
     box-sizing: border-box;
 }
 .cardBack {
-    background: #404040;
+    border-right: solid 1px #223;
+    border-bottom: solid 1px #223;
+    background: url('venus.jpg');
+    background-size: 100%;
 }
 .cardFront {
     backface-visibility: hidden;
@@ -148,24 +151,15 @@ body {
         transform: rotateY(0deg);
     }
 }
-/***************************  card zoom  **************************/
-.zoomCard {
-    animation: zoomCard 1 var(--flipDuration) ease-in-out forwards;
-}
-@keyframes zoomCard {
-    to {
-        height: 600px;
-    }
-}
 /*********************  animations deal cards  ********************/
 .deal0 {
     animation: deal0 var(--dealDuration) ease-in-out forwards;
 }
 @keyframes deal0 {
     to {
-        top: 0;
-        left: calc(-41vw + var(--cardMinusHalfWidth));
-        transform: rotateZ(720deg);
+        top: -70px;
+        left: calc(-40vw + var(--cardMinusHalfWidth));
+        transform: rotate3D(.1,0,1, 360deg);
     }
 }
 .deal1 {
@@ -173,9 +167,9 @@ body {
 }
 @keyframes deal1 {
     to {
-        top: 0;
-        left: calc(-21vw + var(--cardMinusHalfWidth));
-        transform: rotateZ(360deg);
+        top: -70px;
+        left: calc(-20vw + var(--cardMinusHalfWidth));
+        transform: rotate3D(.1,0,1, 360deg);
     }
 }
 .deal2 {
@@ -183,9 +177,9 @@ body {
 }
 @keyframes deal2 {
     to {
-        top: 0;
-        left: calc(-1vw + var(--cardMinusHalfWidth));
-        transform: rotateZ(0deg);
+        top: -70px;
+        left: calc(0vw + var(--cardMinusHalfWidth));
+        transform: rotate3D(.1,0,1, 360deg);
     }
 }
 .deal3 {
@@ -193,9 +187,9 @@ body {
 }
 @keyframes deal3 {
     to {
-        top: 0;
-        left: calc(19vw + var(--cardMinusHalfWidth));
-        transform: rotateZ(720deg);
+        top: -70px;
+        left: calc(20vw + var(--cardMinusHalfWidth));
+        transform: rotate3D(.1,0,1, 360deg);
     }
 }
 .deal4 {
@@ -203,9 +197,8 @@ body {
 }
 @keyframes deal4 {
     to {
-        top: 0;
-        left: calc(39vw + var(--cardMinusHalfWidth));
-        transform: rotateZ(720deg);
+        top: -70px;
+        left: calc(40vw + var(--cardMinusHalfWidth));
+        transform: rotate3D(.1,0,1, 360deg);
     }
 }
-

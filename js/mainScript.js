@@ -72,11 +72,6 @@ function openCard() {
     cardsFronts[i].addClass('rotateFrontSide');
     cardsShadows[i].addClass('rotateShadow');
 
-    /* Zoom */
-    // cardsBacks[i].addClass('zoomCard');
-    // cardsFronts[i].addClass('zoomCard');
-    // cardsTexts[i].addClass('zoomCard');
-
     for (let ii = 0; ii < 5; ++ii) {
         if (ii != i) {
             if (states[ii] === OPEN) {
@@ -175,7 +170,7 @@ for (let i = 0; i < 5; ++i) {
         cardsBacks[i].addEventListener('webkitAnimationEnd', () => {
             if (states[i] === TO_BE_CLOSED) {
                 states[i] = OPEN;
-                cardsFronts[i].click();
+                closeCard(i);
             }
             else if (states[i] === OPENING) {
                 states[i] = OPEN;
@@ -190,8 +185,7 @@ for (let i = 0; i < 5; ++i) {
 
 /***  Cards scrolling  ***/
 
-    // TODO: Show gradient only when it's possible to scroll
-    // TODO: Kinetic scrolling
+    // TODO  Nice to have: Kinetic scrolling
 
 let clicked = false;
 let scrolling = false;
@@ -203,6 +197,7 @@ mainLoop();
 
 if (deviceType() === 'desktop') {
     body.addEventListener('mouseup', mouseUpListener);
+    body.addEventListener('mouseleave', mouseUpListener);
     body.addEventListener('keydown', keyDownScrollListener);
     body.addEventListener('keyup', keyUpScrollListener);
 }
@@ -332,7 +327,6 @@ function getOpenCardIndex() {
 }
 
 function updateGradients(cardText, cardOverlay) {
-    console.log('updating gradients');
     if (cardText.scrollTop === 0) {
         // Show just bottom gradient when scrolled to top
         cardOverlay.removeClass('cardOverlayTopAndBottom', 'cardOverlayTop');
