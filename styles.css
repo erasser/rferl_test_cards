@@ -1,9 +1,9 @@
 :root {
     --dealDuration: .7s;
     --flipDuration: .3s;
-    --cardWidth: 12vw;
+    --cardHeight: 26vw;
+    --cardWidth: calc(var(--cardHeight) * 2/3);
     --cardMinusHalfWidth: calc(var(--cardWidth) / -2);
-    --cardHeight: 18vw;
 }
 html {
     width: 100%;
@@ -41,7 +41,6 @@ body {
 .cardOverlayTopAndBottom,
 .cardOverlayTop,
 .cardOverlayBottom {
-    /*border: solid 1px black;*/
     border-radius: calc((1vh + 1vw) / 2);
     position: absolute;
     width: 100%;
@@ -49,7 +48,7 @@ body {
     box-sizing: border-box;
 }
 .cardBack {
-    background: #666;
+    background: #404040;
 }
 .cardFront {
     backface-visibility: hidden;
@@ -69,11 +68,12 @@ body {
     padding: 0 6px;
     overflow: hidden;
     font-family: Calibri, sans-serif;
-    font-size: 1.4vw;
+    font-size: 1.6vw;
     line-height: .96;
 }
 .cardText h1 {
     font-size: 1.6vw;
+    font-weight: bold;
 }
 .cardShadow {
     position: absolute;
@@ -120,7 +120,7 @@ body {
     }
 }
 /*********************  animations close card  ********************/
-.rotateBackToFront {    /* TODO: ↓ Zkontrolovat */
+.rotateBackToFront {
     animation: rotateBackToFront 1 var(--flipDuration) ease-in-out forwards;
 }
 @keyframes rotateBackToFront {
@@ -146,6 +146,15 @@ body {
     100% {
         opacity: 1;
         transform: rotateY(0deg);
+    }
+}
+/***************************  card zoom  **************************/
+.zoomCard {
+    animation: zoomCard 1 var(--flipDuration) ease-in-out forwards;
+}
+@keyframes zoomCard {
+    to {
+        height: 600px;
     }
 }
 /*********************  animations deal cards  ********************/
@@ -199,3 +208,4 @@ body {
         transform: rotateZ(720deg);
     }
 }
+

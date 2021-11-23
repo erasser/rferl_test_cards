@@ -1,12 +1,17 @@
+/**
+ * Keyboard scrolling controls: up arrow, down arrow, page up, page down, home, end
+ */
+
 // List of elements cached, so each selector is called just once
 let cards = [], cardsFronts = [], cardsBacks = [], cardsShadows = [], cardsTexts = [], cardsOverlays = [], origin;
 const cardDimensions = {x: 0, y: 0};
+let upKeyPressed, downKeyPressed, pageUpKeyPressed, pageDownKeyPressed;
 
-const CLOSED     =  'This is',
-    OPEN         =  'the best',
-    OPENING      =  'solution',
-    CLOSING      =  'of the task',
-    TO_BE_CLOSED =  'hire me :)';
+const CLOSED       =  'This is',
+      OPEN         =  'the best',
+      OPENING      =  'solution',
+      CLOSING      =  'of the task',
+      TO_BE_CLOSED =  'hire me :)';
 
 const states = [,,,,,].fill(CLOSED);  // Holds the actual state of each card
 
@@ -66,6 +71,11 @@ function openCard() {
     cardsBacks[i].addClass('rotateBackSide');
     cardsFronts[i].addClass('rotateFrontSide');
     cardsShadows[i].addClass('rotateShadow');
+
+    /* Zoom */
+    // cardsBacks[i].addClass('zoomCard');
+    // cardsFronts[i].addClass('zoomCard');
+    // cardsTexts[i].addClass('zoomCard');
 
     for (let ii = 0; ii < 5; ++ii) {
         if (ii != i) {
@@ -186,13 +196,19 @@ for (let i = 0; i < 5; ++i) {
 let clicked = false;
 let scrolling = false;
 let lastY;
+let body = document.getElementsByTagName('body')[0];
+
+// Serves to fluent scrolling with a keyboard
+mainLoop();
 
 if (deviceType() === 'desktop') {
-    document.getElementsByTagName('body')[0].addEventListener('mouseup', mouseUpListener);
+    body.addEventListener('mouseup', mouseUpListener);
+    body.addEventListener('keydown', keyDownScrollListener);
+    body.addEventListener('keyup', keyUpScrollListener);
 }
 else {
-    document.getElementsByTagName('body')[0].addEventListener('touchend', mouseUpListener);
-    document.getElementsByTagName('body')[0].addEventListener('touchcancel', mouseUpListener);
+    body.addEventListener('touchend', mouseUpListener);
+    body.addEventListener('touchcancel', mouseUpListener);
 }
 
 function setScrollingListeners(i) {
@@ -201,21 +217,20 @@ function setScrollingListeners(i) {
 
     if (deviceType() === 'desktop') {
         cardOverlay.addEventListener('mousedown', mouseDownListener);
-    }
-    else {
-        cardOverlay.addEventListener('touchstart', mouseDownListener);
-    }
 
-    if (deviceType() === 'desktop') {
         cardOverlay.addEventListener('mousemove', () => {
             pointerMoveListener(cardText, cardOverlay, event.clientY);
         });
     }
     else {
+        cardOverlay.addEventListener('touchstart', mouseDownListener);
         cardOverlay.addEventListener('touchmove', () => {
             pointerMoveListener(cardText, cardOverlay, event.touches[0].clientY);
         });
     }
+
+    // Manages overlay gradients when scrolling
+    cardText.addEventListener('scroll', () => updateGradients(cardsTexts[i], cardsOverlays[i]))
 
     // This solves a situation, when a user tries to drag a card to a side
     // (I.e. moves the mouse just horizontally and the browser starts element dragging)
@@ -256,8 +271,68 @@ function pointerMoveListener(cardText, cardOverlay, cursorY) {
     let delta = lastY - cursorY;
     lastY = cursorY;
     cardText.scrollBy(0, delta);
+}
 
-    /* Manages overlay gradients */
+function keyDownScrollListener() {
+    let i = getOpenCardIndex();
+    if (event.code === 'ArrowUp') {
+        upKeyPressed = true;
+    }
+    else if (event.code === 'ArrowDown') {
+        downKeyPressed = true;
+    }
+    else if (event.code === 'PageUp') {
+        pageUpKeyPressed = true;
+    }
+    else if (event.code === 'PageDown') {
+        pageDownKeyPressed = true;
+    }
+    else if (event.code === 'Home') {
+        cardsTexts[i].scrollTo(0, 0);
+    }
+    else if (event.code === 'End') {
+        cardsTexts[i].scrollTo(0, cardsTexts[i].scrollHeight);
+    }
+}
+
+function keyUpScrollListener() {
+    if (event.code === 'ArrowUp') {
+        upKeyPressed = false;
+    }
+    else if (event.code === 'ArrowDown') {
+        downKeyPressed = false;
+    }
+    else if (event.code === 'PageUp') {
+        pageUpKeyPressed = false;
+    }
+    else if (event.code === 'PageDown') {
+        pageDownKeyPressed = false;
+    }
+}
+
+function mainLoop() {
+    if (upKeyPressed) {
+        cardsTexts[getOpenCardIndex()].scrollBy(0, -4);
+    }
+    else if (downKeyPressed) {
+        cardsTexts[getOpenCardIndex()].scrollBy(0, 4);
+    }
+    else if (pageUpKeyPressed) {
+        cardsTexts[getOpenCardIndex()].scrollBy(0, -16);
+    }
+    else if (pageDownKeyPressed) {
+        cardsTexts[getOpenCardIndex()].scrollBy(0, 16);
+    }
+
+    requestAnimationFrame(mainLoop);
+}
+
+function getOpenCardIndex() {
+    return states.indexOf(OPEN);
+}
+
+function updateGradients(cardText, cardOverlay) {
+    console.log('updating gradients');
     if (cardText.scrollTop === 0) {
         // Show just bottom gradient when scrolled to top
         cardOverlay.removeClass('cardOverlayTopAndBottom', 'cardOverlayTop');
