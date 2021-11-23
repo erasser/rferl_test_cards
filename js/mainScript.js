@@ -185,26 +185,12 @@ for (let i = 0; i < 5; ++i) {
 
 /***  Cards scrolling  ***/
 
-    // TODO  Nice to have: Kinetic scrolling
+// TODO  Nice to have: Kinetic scrolling
 
 let clicked = false;
 let scrolling = false;
 let lastY;
 let body = document.getElementsByTagName('body')[0];
-
-// Serves to fluent scrolling with a keyboard
-mainLoop();
-
-if (deviceType() === 'desktop') {
-    body.addEventListener('mouseup', mouseUpListener);
-    body.addEventListener('mouseleave', mouseUpListener);
-    body.addEventListener('keydown', keyDownScrollListener);
-    body.addEventListener('keyup', keyUpScrollListener);
-}
-else {
-    body.addEventListener('touchend', mouseUpListener);
-    body.addEventListener('touchcancel', mouseUpListener);
-}
 
 function setScrollingListeners(i) {
     const cardOverlay = cardsOverlays[i];
@@ -230,8 +216,24 @@ function setScrollingListeners(i) {
     // This solves a situation, when a user tries to drag a card to a side
     // (I.e. moves the mouse just horizontally and the browser starts element dragging)
     cardOverlay.addEventListener('drag', () => clicked = false);
-}
 
+    // Set <body> scroll events and main loop just once after cards are dealt, 0 is for the last iteration
+    if (i === 0) {
+        if (deviceType() === 'desktop') {
+            body.addEventListener('mouseup', mouseUpListener);
+            body.addEventListener('mouseleave', mouseUpListener);
+            body.addEventListener('keydown', keyDownScrollListener);
+            body.addEventListener('keyup', keyUpScrollListener);
+        }
+        else {
+            body.addEventListener('touchend', mouseUpListener);
+            body.addEventListener('touchcancel', mouseUpListener);
+        }
+
+        // Serves to fluent scrolling with a keyboard
+        mainLoop();
+    }
+}
 
 function mouseUpListener() {
     if (event.button === 2 || event.button === 1) {  // Ignore MMB & RMB click
@@ -270,6 +272,9 @@ function pointerMoveListener(cardText, cardOverlay, cursorY) {
 
 function keyDownScrollListener() {
     let i = getOpenCardIndex();
+    if (i === -1) {
+        return;
+    }
     if (event.code === 'ArrowUp') {
         upKeyPressed = true;
     }
