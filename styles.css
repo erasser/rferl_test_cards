@@ -55,6 +55,7 @@ body {
 }
 .cardFront {
     backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
     transform: rotateY(180deg);
 }
 .cardOverlayTopAndBottom {
@@ -96,6 +97,7 @@ body {
 .rotateBackSide {
     animation: rotateTo180 1 var(--flipDuration) ease-in-out forwards;
     backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 @keyframes rotateTo180 {
     to {
