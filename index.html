@@ -8,8 +8,9 @@
     <script src="jquery-1.11.1.min.js"></script>
 </head>
 <body>
-<div id="origin"></div>
-<div id="info" style="font-size: 32px"></div>
+    <!-- This is the point, at which are the cards initially positioned by their centers (for the purpose of perspective) -->
+    <div id="origin"></div>
+    <div id="info" style="font-size: 32px"></div>
 </body>
 
 <script>   // TODO: Add PHPdoc, on window resize origin, krásný odlesky, -webkit- (safari), encapsulate whole script, nejsou některý třídy stejný?, click events could be simplified to .card, switch theme feature
@@ -56,6 +57,18 @@ window.location.hash = Date.now();  // clear cache
     get('origin').style.left = window.innerWidth / 5 + 'px';
     // get('origin').style.top = window.innerHeight / 7 + 'px';
     get('origin').style.top = '30px';
+
+    deviceType = () => {
+        const ua = navigator.userAgent;
+        if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua) ||
+            /Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)
+        ) {
+            return "mobile";
+        }
+        else {
+            return "desktop";
+        }
+    };
 
 
     /***  Cards flipping functions  ***/
@@ -206,39 +219,68 @@ window.location.hash = Date.now();  // clear cache
     let scrolling = false;
     let lastY;
 
-    get('origin') /*cardOverlay*/ .addEventListener('mouseup', () => {
+    // document.getElementsByTagName('body')[0]
+    //     get('origin')
+    //     cardOverlay
+    if (deviceType() === 'desktop') {
+        document.getElementsByTagName('body')[0].addEventListener('mouseup', mouseUpListener);
+    }
+    else {
+        document.getElementsByTagName('body')[0].addEventListener('touchend', mouseUpListener);
+        // TODO: add touchcancel ↑
+    }
+
+    function mouseUpListener() {  // TODO: It's called while dealing
         if (event.button === 2) {  // TODO: Make it better when mobile works
             return;
         }
         if (!scrolling) {
             closeCard();
         }
+
         clicked = false;
         scrolling = false;
-        // originEventSet = true;
-    });
+    }
+
+    function mouseDownListener() {
+        if (event.button === 2) {  // TODO: Make it better when mobile works
+            return;
+        }
+        lastY = event.clientY;
+        clicked = true;
+        scrolling = false;
+    }
+
+    // function pointerMoveListener(cardText) {
+    //     if (!clicked) return;
+    //     if (!scrolling) {
+    //         scrolling = true;
+    //     }
+    //
+    //     let cursorY = event.clientY;
+    //     let delta = lastY - cursorY;
+    //     lastY = cursorY;
+    //     cardText.scrollBy(0, delta);
+    // }
 
 
-function setScrollingListeners(i) {
+    function setScrollingListeners(i) {
         // if (states[i] !== OPEN) return;
         const cardOverlay = get(`cardOverlay_${i}`);
         // const $cardFront = $(`cardFront_${i}`);
         const cardText = get(`cardText_${i}`);
 
         // get('origin').addEventListener('touchstart', () => {i('origin touch')});
-        cardOverlay.addEventListener('touchstart', () => {I('touch start')} /*, false*/);
-        cardOverlay.addEventListener('touchend', () => {I('touch end')});
+        // cardOverlay.addEventListener('touchstart', () => {I('touch start')} /*, false*/);
+        // cardOverlay.addEventListener('touchend', () => {I('touch end')});
 
-        cardOverlay.addEventListener('mousedown', () => {
-            if (event.button === 2) {  // TODO: Make it better when mobile works
-                return;
-            }
-            lastY = event.clientY;
-            clicked = true;
-            scrolling = false;
+        if (deviceType() === 'desktop') {
+            cardOverlay.addEventListener('mousedown', mouseDownListener);
+        }
+        else {
+            cardOverlay.addEventListener('touchstart', mouseDownListener);
+        }
 
-            // get('origin').addEventListener('select', () => I('select'));  // TODO: Remove
-        });
 
         // if (!originEventSet) {
         // ...
@@ -249,20 +291,36 @@ function setScrollingListeners(i) {
             // event.cancelBubble = true;
         // });
 
-        cardOverlay.addEventListener('mousemove', () => {
-            // $i.text('move');
-            if (!clicked) return;
-            if (!scrolling) {
-                scrolling = true;
-            }
-            let cursorY = event.clientY;
-            // let scrollTop = cardText.scrollTop();
-            let delta = lastY - cursorY;
-            lastY = cursorY;
-// $.text(delta);
-//             cardText.scrollTop(scrollTop + delta);
-            cardText.scrollBy(0, delta);
-        });
+        if (deviceType() === 'desktop') {
+            cardOverlay.addEventListener('mousemove', () => {
+                // pointerMoveListener(cardText);
+                if (!clicked) return;
+                if (!scrolling) {
+                    scrolling = true;
+                }
+
+                let cursorY = event.clientY;
+                let delta = lastY - cursorY;
+                lastY = cursorY;
+                cardText.scrollBy(0, delta);
+
+            });
+        }
+        else {
+            cardOverlay.addEventListener('touchmove', () => {
+                // pointerMoveListener(cardText);
+                if (!clicked) return;
+                if (!scrolling) {
+                    scrolling = true;
+                }
+
+                let cursorY = event.touches[0].clientY;
+                let delta = lastY - cursorY;
+                lastY = cursorY;
+                // console.log(event.touches[0].clientY);
+                cardText.scrollBy(0, delta);
+            });
+        }
 
         // This solves a situation, when a user tries to drag a card to a side
         // (I.e. moves the mouse just horizontally and the browser starts element dragging)
@@ -270,6 +328,8 @@ function setScrollingListeners(i) {
 
         // cardOverlay.on('select', () => console.log('select'));
     }
+
+
 </script>
 
 </html>
