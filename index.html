@@ -206,34 +206,54 @@ window.location.hash = Date.now();  // clear cache
 
     /***  Cards scrolling  ***/
 
-    // TODO: Dvojklikem se dá označit text, nefunguje potom scrolling
-    // TODO: Když se dvojklikem otočí karta, nejde scrollovat
-    // TODO: grab cursor - nepůjde
-    // TODO: fix mobile
     // TODO: Show gradient only when it's possible to scroll
     // TODO: Kinetic scrolling
 
-    let originEventSet;
-    let dealCardsEventsSet;
     let clicked = false;
     let scrolling = false;
     let lastY;
 
-    // document.getElementsByTagName('body')[0]
-    //     get('origin')
-    //     cardOverlay
     if (deviceType() === 'desktop') {
         document.getElementsByTagName('body')[0].addEventListener('mouseup', mouseUpListener);
     }
     else {
         document.getElementsByTagName('body')[0].addEventListener('touchend', mouseUpListener);
-        // TODO: add touchcancel ↑
+        document.getElementsByTagName('body')[0].addEventListener('touchcancel', mouseUpListener);
     }
 
-    function mouseUpListener() {  // TODO: It's called while dealing
-        if (event.button === 2) {  // TODO: Make it better when mobile works
+    function setScrollingListeners(i) {
+        const cardOverlay = get(`cardOverlay_${i}`);
+        const cardText = get(`cardText_${i}`);
+
+        if (deviceType() === 'desktop') {
+            cardOverlay.addEventListener('mousedown', mouseDownListener);
+        }
+        else {
+            cardOverlay.addEventListener('touchstart', mouseDownListener);
+        }
+
+        if (deviceType() === 'desktop') {
+            cardOverlay.addEventListener('mousemove', () => {
+                pointerMoveListener(cardText, event.clientY);
+            });
+        }
+        else {
+            cardOverlay.addEventListener('touchmove', () => {
+                pointerMoveListener(cardText, event.touches[0].clientY);
+            });
+        }
+
+        // This solves a situation, when a user tries to drag a card to a side
+        // (I.e. moves the mouse just horizontally and the browser starts element dragging)
+        cardOverlay.addEventListener('drag', () => clicked = false);
+    }
+
+
+    function mouseUpListener() {
+        if (event.button === 2 || event.button === 1) {  // Ignore MMB & RMB click
             return;
         }
+
         if (!scrolling) {
             closeCard();
         }
@@ -243,92 +263,25 @@ window.location.hash = Date.now();  // clear cache
     }
 
     function mouseDownListener() {
-        if (event.button === 2) {  // TODO: Make it better when mobile works
+        if (event.button === 2 || event.button === 1) {
             return;
         }
+
         lastY = event.clientY;
         clicked = true;
         scrolling = false;
     }
 
-    // function pointerMoveListener(cardText) {
-    //     if (!clicked) return;
-    //     if (!scrolling) {
-    //         scrolling = true;
-    //     }
-    //
-    //     let cursorY = event.clientY;
-    //     let delta = lastY - cursorY;
-    //     lastY = cursorY;
-    //     cardText.scrollBy(0, delta);
-    // }
-
-
-    function setScrollingListeners(i) {
-        // if (states[i] !== OPEN) return;
-        const cardOverlay = get(`cardOverlay_${i}`);
-        // const $cardFront = $(`cardFront_${i}`);
-        const cardText = get(`cardText_${i}`);
-
-        // get('origin').addEventListener('touchstart', () => {i('origin touch')});
-        // cardOverlay.addEventListener('touchstart', () => {I('touch start')} /*, false*/);
-        // cardOverlay.addEventListener('touchend', () => {I('touch end')});
-
-        if (deviceType() === 'desktop') {
-            cardOverlay.addEventListener('mousedown', mouseDownListener);
-        }
-        else {
-            cardOverlay.addEventListener('touchstart', mouseDownListener);
+    function pointerMoveListener(cardText, cursorY) {
+        if (!clicked) return;
+        if (!scrolling) {
+            scrolling = true;
         }
 
-
-        // if (!originEventSet) {
-        // ...
-        // }
-
-        // get(`card_${i}`).addEventListener('mouseup', () => {
-            // event.preventDefault();
-            // event.cancelBubble = true;
-        // });
-
-        if (deviceType() === 'desktop') {
-            cardOverlay.addEventListener('mousemove', () => {
-                // pointerMoveListener(cardText);
-                if (!clicked) return;
-                if (!scrolling) {
-                    scrolling = true;
-                }
-
-                let cursorY = event.clientY;
-                let delta = lastY - cursorY;
-                lastY = cursorY;
-                cardText.scrollBy(0, delta);
-
-            });
-        }
-        else {
-            cardOverlay.addEventListener('touchmove', () => {
-                // pointerMoveListener(cardText);
-                if (!clicked) return;
-                if (!scrolling) {
-                    scrolling = true;
-                }
-
-                let cursorY = event.touches[0].clientY;
-                let delta = lastY - cursorY;
-                lastY = cursorY;
-                // console.log(event.touches[0].clientY);
-                cardText.scrollBy(0, delta);
-            });
-        }
-
-        // This solves a situation, when a user tries to drag a card to a side
-        // (I.e. moves the mouse just horizontally and the browser starts element dragging)
-        // $cardFront.on('drag', () => clicked = false);
-
-        // cardOverlay.on('select', () => console.log('select'));
+        let delta = lastY - cursorY;
+        lastY = cursorY;
+        cardText.scrollBy(0, delta);
     }
-
 
 </script>
 
