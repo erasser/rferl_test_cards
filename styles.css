@@ -1,19 +1,20 @@
 :root {
-    --flipDuration: .5s;
-    --dealDuration: .5s
+    --dealDuration: .7s;
+    --flipDuration: .3s;
+    --cardWidth: 12vw;
+    --cardMinusHalfWidth: calc(var(--cardWidth) / -2);
+    --cardHeight: 18vw;
 }
 html {
     width: 100%;
     height: 100%;
+    overflow: hidden;
 }
 body {
     margin: 0;
     width: 100%;
     height: 100%;
     background: #105063;
-    font-family: Calibri, serif;
-    font-size: 20px;
-    line-height: .95;  /* TODO .95 */
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -23,12 +24,14 @@ body {
 }
 #origin {
     position: absolute;
+    left: 50%;
+    top: 50%;
     perspective: 600px;
 }
 .card {
     position: absolute;
-    width: 100px;
-    height: 200px;
+    width: var(--cardWidth);
+    height: var(--cardHeight);
     perspective: 600px;
     cursor: pointer;
 }
@@ -39,7 +42,7 @@ body {
 .cardOverlayTop,
 .cardOverlayBottom {
     /*border: solid 1px black;*/
-    border-radius: 10px;
+    border-radius: calc((1vh + 1vw) / 2);
     position: absolute;
     width: 100%;
     height: 100%;
@@ -65,6 +68,12 @@ body {
     background: #fff;
     padding: 0 6px;
     overflow: hidden;
+    font-family: Calibri, sans-serif;
+    font-size: 1.4vw;
+    line-height: .96;
+}
+.cardText h1 {
+    font-size: 1.6vw;
 }
 .cardShadow {
     position: absolute;
@@ -144,9 +153,9 @@ body {
     animation: deal0 var(--dealDuration) ease-in-out forwards;
 }
 @keyframes deal0 {
-    to {         /*transform: translate3d(200%, 200px, 0);*/
-        top: 10vh;
-        left: 10vw;
+    to {
+        top: 0;
+        left: calc(-41vw + var(--cardMinusHalfWidth));
         transform: rotateZ(720deg);
     }
 }
@@ -155,9 +164,9 @@ body {
 }
 @keyframes deal1 {
     to {
-        top: 10vh;
-        left: 20vw;
-        transform: rotateZ(720deg);
+        top: 0;
+        left: calc(-21vw + var(--cardMinusHalfWidth));
+        transform: rotateZ(360deg);
     }
 }
 .deal2 {
@@ -165,9 +174,9 @@ body {
 }
 @keyframes deal2 {
     to {
-        top: 10vh;
-        left: 30vw;
-        transform: rotateZ(720deg);
+        top: 0;
+        left: calc(-1vw + var(--cardMinusHalfWidth));
+        transform: rotateZ(0deg);
     }
 }
 .deal3 {
@@ -175,8 +184,8 @@ body {
 }
 @keyframes deal3 {
     to {
-        top: 10vh;
-        left: 40vw;
+        top: 0;
+        left: calc(19vw + var(--cardMinusHalfWidth));
         transform: rotateZ(720deg);
     }
 }
@@ -185,8 +194,8 @@ body {
 }
 @keyframes deal4 {
     to {
-        top: 10vh;
-        left: 50vw;
+        top: 0;
+        left: calc(39vw + var(--cardMinusHalfWidth));
         transform: rotateZ(720deg);
     }
 }
