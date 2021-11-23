@@ -14,15 +14,19 @@
 </body>
 
 <script>   // TODO: Add PHPdoc, on window resize origin, krásný odlesky, -webkit- (safari), encapsulate whole script, nejsou některý třídy stejný?, click events could be simplified to .card, switch theme feature
-    let cards;  // list of all cards elements
+    // List of elements cached, so each selector is called just once
+    let cards = [], cardsFronts = [], cardsBacks = [], cardsShadows = [], cardsTexts = [], cardsOverlays = [], origin;
+    const cardDimensions = {x: 0, y: 0};
+    const cardsContents = ['Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... ', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet...'];
+
     const CLOSED       =  'This is',
           OPEN         =  'the best',
           OPENING      =  'solution',
           CLOSING      =  'of the task',
           TO_BE_CLOSED =  'hire me :)';
+
     const states = [,,,,,].fill(CLOSED);  // Holds the actual state of each card
-    const cardDimensions = {x: 0, y: 0};
-    const cardsContents = ['Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... ', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet...'];
+
     const $i = $($('#info'));
 $i.css('font-size', '40px').css('color', 'gold').css('font-weight', 'bold').css('height', '100%');
 window.location.hash = Date.now();  // clear cache
@@ -42,16 +46,16 @@ window.location.hash = Date.now();  // clear cache
     }
 
     updateCardDimensions = () => {
-        cardDimensions.x = get('card_0').scrollWidth;
-        cardDimensions.y = get('card_0').scrollHeight;
+        cardDimensions.x = cards[0].scrollWidth;
+        cardDimensions.y = cards[0].scrollHeight;
     }
 
     // Extend HTMLElement class to simplify DOM manipulation
-    HTMLElement.prototype.addClass = function(className) {
-        this.classList.add(className);
+    HTMLElement.prototype.addClass = function(...classes) {
+        this.classList.add(...classes);
     };
-    HTMLElement.prototype.removeClass = function(className) {
-        this.classList.remove(className);
+    HTMLElement.prototype.removeClass = function(...classes) {
+        this.classList.remove(...classes);
     };
 
     get('origin').style.left = window.innerWidth / 5 + 'px';
@@ -81,29 +85,19 @@ window.location.hash = Date.now();  // clear cache
 
         states[i] = OPENING;
 
-        /* All of these must be called in particular order */
-
         // Set initial transformations before rotation
-        get(`cardBack_${i}`).removeClass('rotateBackSide');
-        get(`cardBack_${i}`).removeClass('setRotated180');
-        get(`cardBack_${i}`).removeClass('rotateBackToFront');
-        get(`cardFront_${i}`).removeClass('rotateFrontSide');
-        get(`cardFront_${i}`).removeClass('setRotated360');
-        get(`cardFront_${i}`).removeClass('rotateFrontToBack');
-        get(`cardShadow_${i}`).removeClass('rotateShadow');
-        get(`cardShadow_${i}`).removeClass('rotateShadowFront');
-        get(`cardShadow_${i}`).removeClass('setRotated180');
+        cardsBacks[i].removeClass('rotateBackSide', 'setRotated180', 'rotateBackToFront');
+        cardsFronts[i].removeClass('rotateFrontSide', 'setRotated360', 'rotateFrontToBack');
+        cardsShadows[i].removeClass('rotateShadow', 'rotateShadowFront', 'setRotated180');
 
         // Rotate
-        get(`cardBack_${i}`).addClass('rotateBackSide');
-        get(`cardFront_${i}`).addClass('rotateFrontSide');
-        get(`cardShadow_${i}`).addClass('rotateShadow');
+        cardsBacks[i].addClass('rotateBackSide');
+        cardsFronts[i].addClass('rotateFrontSide');
+        cardsShadows[i].addClass('rotateShadow');
 
         for (let ii = 0; ii < 5; ++ii) {
             if (ii != i) {
                 if (states[ii] === OPEN) {
-                    // get(`cardFront_${ii}`).click();
-                    console.log('closing other card ' + ii);
                     closeCard(ii);
                 }
                 else if (states[ii] === OPENING) {
@@ -122,37 +116,32 @@ window.location.hash = Date.now();  // clear cache
 
         states[i] = CLOSING;
 
-        /* All of these must be called in particular order */
-
         // Set initial transformations before rotation
-        get(`cardFront_${i}`).addClass('setRotated360');
-        get(`cardFront_${i}`).addClass('rotateFrontToBack');
-        get(`cardShadow_${i}`).addClass('setRotated180');
+        cardsFronts[i].addClass('setRotated360', 'rotateFrontToBack');
+        cardsShadows[i].addClass('setRotated180');
 
         // Rotate
-        get(`cardBack_${i}`).addClass('setRotated180');
-        get(`cardBack_${i}`).addClass('rotateBackToFront');
-        get(`cardShadow_${i}`).addClass('rotateShadowFront');
+        cardsBacks[i].addClass('setRotated180', 'rotateBackToFront');
+        cardsShadows[i].addClass('rotateShadowFront');
     }
 
     dealCards = () => {
-        get(`card_4`).addClass('deal1st');
-        get(`card_3`).addClass('deal2st');
-        get(`card_2`).addClass('deal3st');
-        get(`card_1`).addClass('deal4st');
-        get(`card_0`).addClass('deal5st');
-    };
+        for (let i = 0; i < cards.length; ++i) {
+            cards[i].addClass(`deal${4 - i}`);
+        }
+    }
 
 
     /***  Generate cards  ***/
 
+    origin = get('origin');
     const angleSegment = 2 * Math.PI / 5;
     for (let i = 0; i < 5; ++i) {
         const cardHTML =
             `<div class="card" id="card_${i}">` +
             `    <div class="cardBack" id="cardBack_${i}" style="z-index: ${3 * i + 1}"></div>` +
             `    <div class="cardFront" id="cardFront_${i}" style="z-index: ${3 * i + 1}">` +
-            `        <div class="cardOverlay" id="cardOverlay_${i}" style="z-index: ${3 * i + 2}"></div>` +
+            `        <div class="cardOverlayBottom" id="cardOverlay_${i}" style="z-index: ${3 * i + 2}"></div>` +
             `        <div class="cardText" id="cardText_${i}">${cardsContents[i]}</div>` +
             `    </div>` +
             `    <div class="cardShadow" id="cardShadow_${i}" style="z-index: ${3 * i}"></div>` +
@@ -160,13 +149,21 @@ window.location.hash = Date.now();  // clear cache
 
         const newCard = document.createElement('template');
         newCard.innerHTML = cardHTML;
-        get('origin').appendChild(newCard.content.firstChild);
+        origin.appendChild(newCard.content.firstChild);
+
+        /* Cache card elements */
+        cards.push(get(`card_${i}`));
+        cardsFronts.push(get(`cardFront_${i}`));
+        cardsBacks.push(get(`cardBack_${i}`));
+        cardsShadows.push(get(`cardShadow_${i}`));
+        cardsTexts.push(get(`cardText_${i}`));
+        cardsOverlays.push(get(`cardOverlay_${i}`));
 
         if (i === 0) {
             updateCardDimensions();
         }
 
-        const newCardEl = get(`card_${i}`);
+        const newCardEl = cards[i];
         const angle = angleSegment * i;
         const x = Math.cos(angle) * 20 + cardDimensions.x / 2 + rndSign() * 4 * Math.random();
         const y = Math.sin(angle) * 10 + cardDimensions.y / 2 + rndSign() * 4 * Math.random();
@@ -184,12 +181,12 @@ window.location.hash = Date.now();  // clear cache
             setScrollingListeners(i);
 
             /* Set flip card event listeners */
-            get(`cardBack_${i}`).addEventListener(`click`, openCard);
+            cardsBacks[i].addEventListener(`click`, openCard);
 
-            get(`cardBack_${i}`).addEventListener('webkitAnimationEnd', () => {
+            cardsBacks[i].addEventListener('webkitAnimationEnd', () => {
                 if (states[i] === TO_BE_CLOSED) {
                     states[i] = OPEN;
-                    get(`cardFront_${i}`).click();
+                    cardsFronts[i].click();
                 }
                 else if (states[i] === OPENING) {
                     states[i] = OPEN;
@@ -200,8 +197,6 @@ window.location.hash = Date.now();  // clear cache
             });
         }, {once: true});
     }
-
-    cards = document.getElementsByClassName('card');
 
 
     /***  Cards scrolling  ***/
@@ -222,8 +217,8 @@ window.location.hash = Date.now();  // clear cache
     }
 
     function setScrollingListeners(i) {
-        const cardOverlay = get(`cardOverlay_${i}`);
-        const cardText = get(`cardText_${i}`);
+        const cardOverlay = cardsOverlays[i];
+        const cardText = cardsTexts[i];
 
         if (deviceType() === 'desktop') {
             cardOverlay.addEventListener('mousedown', mouseDownListener);
@@ -234,12 +229,12 @@ window.location.hash = Date.now();  // clear cache
 
         if (deviceType() === 'desktop') {
             cardOverlay.addEventListener('mousemove', () => {
-                pointerMoveListener(cardText, event.clientY);
+                pointerMoveListener(cardText, cardOverlay, event.clientY);
             });
         }
         else {
             cardOverlay.addEventListener('touchmove', () => {
-                pointerMoveListener(cardText, event.touches[0].clientY);
+                pointerMoveListener(cardText, cardOverlay, event.touches[0].clientY);
             });
         }
 
@@ -272,15 +267,33 @@ window.location.hash = Date.now();  // clear cache
         scrolling = false;
     }
 
-    function pointerMoveListener(cardText, cursorY) {
+    function pointerMoveListener(cardText, cardOverlay, cursorY) {
         if (!clicked) return;
         if (!scrolling) {
             scrolling = true;
         }
 
+        /* Scroll */
         let delta = lastY - cursorY;
         lastY = cursorY;
         cardText.scrollBy(0, delta);
+
+        /* Manages overlay gradients */
+        if (cardText.scrollTop === 0) {
+            // Show just bottom gradient when scrolled to top
+            cardOverlay.removeClass('cardOverlayTopAndBottom', 'cardOverlayTop');
+            cardOverlay.addClass('cardOverlayBottom');
+        }
+        else if (cardText.scrollHeight - cardText.scrollTop - cardText.offsetHeight === 0) {
+            // Show just top gradient when scrolled to bottom
+            cardOverlay.removeClass('cardOverlayTopAndBottom', 'cardOverlayBottom');
+            cardOverlay.addClass('cardOverlayTop');
+        }
+        else {
+            // Show both top & bottom gradients when scrolled somewhere between
+            cardOverlay.removeClass('cardOverlayTop', 'cardOverlayBottom');
+            cardOverlay.addClass('cardOverlayTopAndBottom');
+        }
     }
 
 </script>

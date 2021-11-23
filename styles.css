@@ -13,7 +13,7 @@ body {
     background: #105063;
     font-family: Calibri, serif;
     font-size: 20px;
-    line-height: 1.95;  /* TODO .95 */
+    line-height: .95;  /* TODO .95 */
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -32,7 +32,12 @@ body {
     perspective: 600px;
     cursor: pointer;
 }
-.cardBack, .cardFront, .cardOverlay, .cardText {
+.cardBack,
+.cardFront,
+.cardText,
+.cardOverlayTopAndBottom,
+.cardOverlayTop,
+.cardOverlayBottom {
     /*border: solid 1px black;*/
     border-radius: 10px;
     position: absolute;
@@ -44,12 +49,17 @@ body {
     background: #666;
 }
 .cardFront {
-    background: #fff;
     backface-visibility: hidden;
     transform: rotateY(180deg);
 }
-.cardOverlay {
+.cardOverlayTopAndBottom {
     background: linear-gradient(to bottom, #ffff 1%, #fff0 22%, #fff0 78%, #ffff 99%);
+}
+.cardOverlayTop {
+    background: linear-gradient(to top, #fff0 0%, #fff0 78%, #ffff 99%);
+}
+.cardOverlayBottom {
+    background: linear-gradient(to bottom, #fff0 0%, #fff0 78%, #ffff 99%);
 }
 .cardText {
     background: #fff;
@@ -130,50 +140,50 @@ body {
     }
 }
 /*********************  animations deal cards  ********************/
-.deal1st {
-    animation: deal1st var(--dealDuration) ease-in-out forwards;
+.deal0 {
+    animation: deal0 var(--dealDuration) ease-in-out forwards;
 }
-@keyframes deal1st {
+@keyframes deal0 {
     to {         /*transform: translate3d(200%, 200px, 0);*/
         top: 10vh;
         left: 10vw;
         transform: rotateZ(720deg);
     }
 }
-.deal2st {
-    animation: deal2st var(--dealDuration) ease-in-out .25s forwards;
+.deal1 {
+    animation: deal1 var(--dealDuration) ease-in-out .25s forwards;
 }
-@keyframes deal2st {
+@keyframes deal1 {
     to {
         top: 10vh;
         left: 20vw;
         transform: rotateZ(720deg);
     }
 }
-.deal3st {
-    animation: deal3st var(--dealDuration) ease-in-out .5s forwards;
+.deal2 {
+    animation: deal2 var(--dealDuration) ease-in-out .5s forwards;
 }
-@keyframes deal3st {
+@keyframes deal2 {
     to {
         top: 10vh;
         left: 30vw;
         transform: rotateZ(720deg);
     }
 }
-.deal4st {
-    animation: deal4st var(--dealDuration) ease-in-out .75s forwards;
+.deal3 {
+    animation: deal3 var(--dealDuration) ease-in-out .75s forwards;
 }
-@keyframes deal4st {
+@keyframes deal3 {
     to {
         top: 10vh;
         left: 40vw;
         transform: rotateZ(720deg);
     }
 }
-.deal5st {
-    animation: deal5st var(--dealDuration) ease-in-out 1s forwards;
+.deal4 {
+    animation: deal4 var(--dealDuration) ease-in-out 1s forwards;
 }
-@keyframes deal5st {
+@keyframes deal4 {
     to {
         top: 10vh;
         left: 50vw;
