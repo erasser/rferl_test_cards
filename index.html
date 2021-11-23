@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
     <title>Cards</title>
     <link rel="stylesheet" href="styles.css?3">
     <script src="jquery-1.11.1.min.js"></script>
@@ -22,8 +23,12 @@
     const cardDimensions = {x: 0, y: 0};
     const cardsContents = ['Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet... ', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet', 'Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet... Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet...'];
     const $i = $($('#info'));
-$i.css('font-size', '40px').css('color', 'gold').css('font-weight', 'bold');
+$i.css('font-size', '40px').css('color', 'gold').css('font-weight', 'bold').css('height', '100%');
 window.location.hash = Date.now();  // clear cache
+
+    I = (text) => {
+        $i.html(text + '<br>' + $i.html());
+    }
 
     /***  Global functions  ***/
 
@@ -162,6 +167,9 @@ window.location.hash = Date.now();  // clear cache
         /* Listeners that need to be set after cards dealing */
         newCardEl.addEventListener('webkitAnimationEnd', () => {
 
+            /* Set scrolling event listeners */
+            setScrollingListeners(i);
+
             /* Set flip card event listeners */
             get(`cardBack_${i}`).addEventListener(`click`, openCard);
 
@@ -176,9 +184,6 @@ window.location.hash = Date.now();  // clear cache
                 else if (states[i] === CLOSING) {
                     states[i] = CLOSED;
                 }
-
-                /* Set scrolling event listeners */
-                setScrollingListeners(i);
             });
         });
     }
@@ -196,18 +201,21 @@ window.location.hash = Date.now();  // clear cache
     // TODO: Kinetic scrolling
 
     let originEventSet;
+    let dealCardsEventsSet;
     let clicked = false;
     let scrolling = false;
     let lastY;
 
     function setScrollingListeners(i) {
+        // console.log('setting listeners');
         if (states[i] !== OPEN) return;
         const cardOverlay = get(`cardOverlay_${i}`);
         // const $cardFront = $(`cardFront_${i}`);
         const cardText = get(`cardText_${i}`);
 
-        cardOverlay.addEventListener('touchstart', () => {console.log('touch start')}, false);
-        cardOverlay.addEventListener('touchend', () => {console.log('touch end')}, false);
+        // get('origin').addEventListener('touchstart', () => {i('origin touch')});
+        cardOverlay.addEventListener('touchstart', () => {I('touch start')} /*, false*/);
+        cardOverlay.addEventListener('touchend', () => {I('touch end')});
 
         cardOverlay.addEventListener('mousedown', () => {
             if (event.button === 2) {  // TODO: Make it better when mobile works
@@ -217,7 +225,7 @@ window.location.hash = Date.now();  // clear cache
             clicked = true;
             scrolling = false;
 
-            get('origin').addEventListener('select', () => $i.text('select'));  // TODO: Remove
+            get('origin').addEventListener('select', () => I('select'));  // TODO: Remove
         });
 
         if (!originEventSet) {

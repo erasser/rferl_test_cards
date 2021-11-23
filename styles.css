@@ -1,6 +1,8 @@
 :root {--t: .5s; --tt: .5s}
 body {
     margin: 0;
+    width: 100%;
+    height: 100%;
     background: #301d33;
     font-family: Calibri, serif;
     font-size: 20px;
@@ -13,8 +15,8 @@ body {
     -webkit-tap-highlight-color: #0000;
 }
 #origin {
-    width: 100%;
-    height: 100%;
+    /*width: 100%;*/
+    /*height: 100%;*/
     position: absolute;
     perspective: 600px;
 }
