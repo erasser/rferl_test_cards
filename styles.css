@@ -68,7 +68,7 @@ body {
 }
 .cardText {
     background: #fff;
-    padding: 0 6px;
+    padding: 0 6px 12px 6px;
     overflow: hidden;
     font-family: Calibri, sans-serif;
     font-size: 1.6vw;
