@@ -337,7 +337,7 @@ function updateGradients(cardText, cardOverlay) {
         cardOverlay.removeClass('cardOverlayTopAndBottom', 'cardOverlayTop');
         cardOverlay.addClass('cardOverlayBottom');
     }
-    else if (cardText.scrollHeight - cardText.scrollTop - cardText.offsetHeight <= 0) {
+    else if (cardText.scrollHeight - cardText.scrollTop - cardText.offsetHeight <= 1) {
         // Show just top gradient when scrolled to bottom
         cardOverlay.removeClass('cardOverlayTopAndBottom', 'cardOverlayBottom');
         cardOverlay.addClass('cardOverlayTop');
