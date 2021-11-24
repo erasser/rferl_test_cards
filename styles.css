@@ -26,13 +26,12 @@ body {
     position: absolute;
     left: 50%;
     top: 50%;
-    perspective: 600px;
 }
 .card {
     position: absolute;
     width: var(--cardWidth);
     height: var(--cardHeight);
-    perspective: 600px;
+    perspective: 700px;
     cursor: pointer;
 }
 .cardBack,
